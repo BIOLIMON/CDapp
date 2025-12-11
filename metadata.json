@@ -1,0 +1,7 @@
+{
+  "name": "CultivaDatos - Bitácora Digital",
+  "description": "Aplicación oficial para el seguimiento de experimentos del kit CultivaDatos. Registra el progreso de tus plantas de tomate, visualiza datos y recibe asistencia basada en el manual del proyecto.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

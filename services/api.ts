@@ -1,0 +1,305 @@
+import { supabase } from '../lib/supabase';
+import { ExperimentEntry, UserProfile, GlobalStats } from '../types';
+
+export const api = {
+    // --- User / Profile ---
+
+    async getProfile(userId: string): Promise<UserProfile | null> {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if (error) {
+            console.error('Error fetching profile:', error);
+            return null;
+        }
+
+        // Map DB columns to camelCase types if needed, or rely on loose matching if types align.
+        // Our DB uses snake_case, types use camelCase. We need mapping.
+        return {
+            id: data.id,
+            email: data.email,
+            role: data.role,
+            name: data.name,
+            kitCode: data.kit_code,
+            startDate: data.start_date,
+            score: data.score,
+            password: '' // Not exposed
+        };
+    },
+
+    async createProfile(profile: UserProfile) {
+        // 1. Auth Signup is handled in the UI/Register component via supabase.auth.signUp()
+        // 2. This function is for inserting the profile row if not done properly by triggers
+        // Or updating an existing one.
+
+        // Since we are using RLS policies where user inserts their own profile:
+        const { error } = await supabase
+            .from('profiles')
+            .upsert({
+                id: profile.id, // Must match auth.uid()
+                email: profile.email,
+                role: profile.role || 'user',
+                name: profile.name,
+                kit_code: profile.kitCode,
+                start_date: profile.startDate,
+                score: 0
+            });
+
+        if (error) throw error;
+    },
+
+    async promoteToAdmin(userId: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('profiles')
+            .update({ role: 'admin' })
+            .eq('id', userId);
+
+        if (error) {
+            console.error("Error promoting user", error);
+            return false;
+        }
+        return true;
+    },
+
+    // --- Entries ---
+
+    async getUserEntries(userId: string): Promise<ExperimentEntry[]> {
+        const { data, error } = await supabase
+            .from('experiment_entries')
+            .select(`
+        *,
+        pots (*)
+      `)
+            .eq('user_id', userId)
+            .order('date', { ascending: false });
+
+        if (error) throw error;
+
+        // Transform to frontend structure
+        return data.map((e: any) => ({
+            id: e.id,
+            userId: e.user_id,
+            date: e.date,
+            dayNumber: e.day_number,
+            generalNotes: e.general_notes || '',
+            pots: e.pots.reduce((acc: any, pot: any) => {
+                acc[pot.pot_id] = {
+                    weight: pot.weight?.toString() || '',
+                    height: pot.height?.toString() || '',
+                    visualStatus: pot.visual_status,
+                    ph: pot.ph?.toString() || '',
+                    notes: pot.notes || '',
+                    images: pot.images || {}
+                };
+                return acc;
+            }, {})
+        }));
+    },
+
+    async addEntry(entry: ExperimentEntry) {
+        // 1. Insert Entry
+        const { data: entryData, error: entryError } = await supabase
+            .from('experiment_entries')
+            .insert({
+                user_id: entry.userId,
+                date: entry.date,
+                day_number: entry.dayNumber,
+                general_notes: entry.generalNotes
+            })
+            .select()
+            .single();
+
+        if (entryError) throw entryError;
+
+        // 2. Insert Pots
+        const potRows = Object.entries(entry.pots).map(([potId, potData]) => ({
+            entry_id: entryData.id,
+            pot_id: potId,
+            weight: parseFloat(String(potData.weight)) || 0,
+            height: parseFloat(String(potData.height)) || 0,
+            visual_status: potData.visualStatus,
+            ph: parseFloat(String(potData.ph)) || 0,
+            notes: potData.notes,
+            images: potData.images // JSONB
+        }));
+
+        const { error: potsError } = await supabase
+            .from('pots')
+            .insert(potRows);
+
+        if (potsError) throw potsError;
+
+        return this.updateScore(entry.userId); // Recalculate and return new score
+    },
+
+    // --- Stats / Admin ---
+
+    async updateScore(userId: string): Promise<number> {
+        // Calculate score based on entries (simplified logic similar to db.ts)
+        // For MVP, we can just increment or do a simple count query
+        // Let's do a simple count for now to save performance
+
+        const { count } = await supabase
+            .from('experiment_entries')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId);
+
+        const newScore = (count || 0) * 100; // Simplified scoring
+
+        await supabase
+            .from('profiles')
+            .update({ score: newScore })
+            .eq('id', userId);
+
+        return newScore;
+    },
+
+    async getAllUsers(): Promise<UserProfile[]> {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*');
+
+        if (error) throw error;
+
+        return data.map((d: any) => ({
+            id: d.id,
+            email: d.email,
+            name: d.name,
+            role: d.role,
+            kitCode: d.kit_code,
+            startDate: d.start_date,
+            score: d.score,
+            password: ''
+        }));
+    },
+
+    async getAllEntries(): Promise<ExperimentEntry[]> {
+        // Admin only function typically
+        const { data, error } = await supabase
+            .from('experiment_entries')
+            .select(`*, pots(*)`)
+            .order('date', { ascending: false });
+
+        if (error) throw error;
+
+        return data.map((e: any) => ({
+            id: e.id,
+            userId: e.user_id,
+            date: e.date,
+            dayNumber: e.day_number,
+            generalNotes: e.general_notes,
+            pots: e.pots.reduce((acc: any, pot: any) => {
+                acc[pot.pot_id] = {
+                    weight: pot.weight?.toString() || '',
+                    height: pot.height?.toString() || '',
+                    visualStatus: pot.visual_status,
+                    ph: pot.ph?.toString() || '',
+                    notes: pot.notes || '',
+                    images: pot.images || {}
+                };
+                return acc;
+            }, {})
+        }));
+    },
+
+    async uploadImage(file: File, path: string) {
+        const { data, error } = await supabase.storage
+            .from('images') // Ensure bucket "images" exists
+            .upload(path, file, { upsert: true });
+
+        if (error) throw error;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+            .from('images')
+            .getPublicUrl(path);
+
+        return publicUrl;
+    },
+
+    // --- Kit Management ---
+
+    async checkKitAvailability(code: string): Promise<{ available: boolean, kit?: any }> {
+        const { data, error } = await supabase
+            .from('allowed_kits')
+            .select('*')
+            .eq('code', code)
+            .single();
+
+        if (error) {
+            // If code not found (code is unique)
+            return { available: false };
+        }
+
+        return {
+            available: data.status === 'available',
+            kit: data
+        };
+    },
+
+    async claimKit(code: string, userId: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('allowed_kits')
+            .update({
+                status: 'claimed',
+                claimed_by: userId,
+                claimed_at: new Date().toISOString()
+            })
+            .eq('code', code)
+            .eq('status', 'available'); // Double check purely at DB level
+
+        if (error) {
+            console.error("Error claiming kit", error);
+            return false;
+        }
+        return true;
+    },
+
+    async uploadKits(kits: { code: string, batch_id: string }[], secret?: string): Promise<{ success: boolean, count?: number, error?: any }> {
+        if (secret) {
+            // Use RPC for System Admin (bypass)
+            const { data, error } = await supabase.rpc('admin_upload_kits', {
+                secret_key: secret,
+                kits_data: kits
+            });
+
+            if (error) {
+                console.error("RPC Error:", error);
+                return { success: false, error };
+            }
+            // Check application level error from RPC return
+            if (data && !data.success) {
+                return { success: false, error: { message: data.error } };
+            }
+            return { success: true, count: data.count || kits.length }; // Approx count if not returned exact
+
+        } else {
+            // Standard Authenticated Insert
+            const { data, error } = await supabase
+                .from('allowed_kits')
+                .upsert(kits, { onConflict: 'code', ignoreDuplicates: true }) // Ignore duplicates to prevent errors on existing codes
+                .select();
+
+            if (error) {
+                console.error("Error uploading kits", error);
+                return { success: false, count: 0, error };
+            }
+
+            return { success: true, count: data?.length || 0 };
+        }
+    },
+
+    async getKitsStats(): Promise<{ total: number, claimed: number, available: number }> {
+        const { count: total } = await supabase.from('allowed_kits').select('*', { count: 'exact', head: true });
+        const { count: claimed } = await supabase.from('allowed_kits').select('*', { count: 'exact', head: true }).eq('status', 'claimed');
+
+        return {
+            total: total || 0,
+            claimed: claimed || 0,
+            available: (total || 0) - (claimed || 0)
+        };
+    }
+};
