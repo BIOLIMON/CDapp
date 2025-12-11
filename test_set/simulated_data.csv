@@ -1,85 +1,245 @@
 Date,Day,PotID,Treatment,Weight,Height,pH,VisualStatus,Image
-2025-01-01,0,1,Control,507.3,6.1,6.5,Saludable,test_set/Frente/1.png
-2025-01-01,0,2,Sequía,499.7,5.5,6.1,Saludable,test_set/Frente/1.png
-2025-01-01,0,3,Fertilizante,492.0,6.8,7.3,Saludable,test_set/Frente/1.png
-2025-01-01,0,4,Sequía + Fertilizante,508.9,7.2,6.7,Saludable,test_set/Frente/1.png
-2025-01-04,3,1,Control,526.2,9.0,6.9,Saludable,test_set/Frente/1.png
-2025-01-04,3,2,Sequía,506.3,7.8,6.8,Saludable,test_set/Frente/1.png
-2025-01-04,3,3,Fertilizante,521.5,8.4,6.3,Saludable,test_set/Frente/1.png
-2025-01-04,3,4,Sequía + Fertilizante,496.4,8.9,7.3,Saludable,test_set/Frente/1.png
-2025-01-07,6,1,Control,506.0,13.4,6.0,Saludable,test_set/Frente/2.png
-2025-01-07,6,2,Sequía,517.2,9.1,6.1,Saludable,test_set/Frente/2.png
-2025-01-07,6,3,Fertilizante,502.7,11.9,7.3,Saludable,test_set/Frente/2.png
-2025-01-07,6,4,Sequía + Fertilizante,487.5,9.9,6.9,Saludable,test_set/Frente/2.png
-2025-01-10,9,1,Control,516.0,15.8,7.3,Saludable,test_set/Frente/2.png
-2025-01-10,9,2,Sequía,499.3,11.3,7.1,Saludable,test_set/Frente/2.png
-2025-01-10,9,3,Fertilizante,528.1,16.5,6.1,Saludable,test_set/Frente/2.png
-2025-01-10,9,4,Sequía + Fertilizante,509.9,13.0,7.2,Saludable,test_set/Frente/2.png
-2025-01-13,12,1,Control,521.4,21.9,6.6,Saludable,test_set/Frente/3.png
-2025-01-13,12,2,Sequía,513.1,13.8,7.4,Saludable,test_set/Frente/3.png
-2025-01-13,12,3,Fertilizante,524.6,23.0,7.4,Saludable,test_set/Frente/3.png
-2025-01-13,12,4,Sequía + Fertilizante,493.1,17.7,6.3,Saludable,test_set/Frente/3.png
-2025-01-16,15,1,Control,508.1,27.4,7.3,Saludable,test_set/Frente/3.png
-2025-01-16,15,2,Sequía,513.1,15.8,6.6,Saludable,test_set/Frente/3.png
-2025-01-16,15,3,Fertilizante,529.8,31.7,6.3,Saludable,test_set/Frente/3.png
-2025-01-16,15,4,Sequía + Fertilizante,499.7,20.5,7.3,Saludable,test_set/Frente/3.png
-2025-01-19,18,1,Control,519.1,35.4,6.7,Saludable,test_set/Frente/4.png
-2025-01-19,18,2,Sequía,533.5,19.8,7.0,Saludable,test_set/Frente/4.png
-2025-01-19,18,3,Fertilizante,550.2,40.7,6.6,Saludable,test_set/Frente/4.png
-2025-01-19,18,4,Sequía + Fertilizante,534.8,25.9,6.7,Saludable,test_set/Frente/4.png
-2025-01-22,21,1,Control,551.2,44.3,7.1,Saludable,test_set/Frente/4.png
-2025-01-22,21,2,Sequía,529.7,24.5,7.1,Saludable,test_set/Frente/4.png
-2025-01-22,21,3,Fertilizante,552.5,53.9,6.6,Saludable,test_set/Frente/4.png
-2025-01-22,21,4,Sequía + Fertilizante,535.5,32.4,7.1,Saludable,test_set/Frente/4.png
-2025-01-25,24,1,Control,579.5,53.2,6.6,Saludable,test_set/Frente/5.png
-2025-01-25,24,2,Sequía,515.6,28.3,6.9,Saludable,test_set/Frente/5.png
-2025-01-25,24,3,Fertilizante,571.7,68.3,6.5,Saludable,test_set/Frente/5.png
-2025-01-25,24,4,Sequía + Fertilizante,521.4,40.0,6.8,Saludable,test_set/Frente/5.png
-2025-01-28,27,1,Control,565.7,64.1,7.1,Saludable,test_set/Frente/5.png
-2025-01-28,27,2,Sequía,525.0,35.3,6.3,Hojas levemente caídas,test_set/Frente/5.png
-2025-01-28,27,3,Fertilizante,612.5,85.3,6.6,Saludable,test_set/Frente/5.png
-2025-01-28,27,4,Sequía + Fertilizante,557.1,46.0,6.4,Saludable,test_set/Frente/5.png
-2025-01-31,30,1,Control,617.0,74.2,6.2,Saludable,test_set/Frente/6.png
-2025-01-31,30,2,Sequía,531.0,39.2,6.4,Hojas levemente caídas,test_set/Frente/6.png
-2025-01-31,30,3,Fertilizante,642.0,101.3,7.0,Saludable,test_set/Frente/6.png
-2025-01-31,30,4,Sequía + Fertilizante,582.8,55.2,6.8,Saludable,test_set/Frente/6.png
-2025-02-03,33,1,Control,612.4,85.8,6.6,Saludable,test_set/Frente/7.png
-2025-02-03,33,2,Sequía,546.9,46.2,6.4,Hojas levemente caídas,test_set/Frente/7.png
-2025-02-03,33,3,Fertilizante,674.3,116.2,7.0,Saludable,test_set/Frente/7.png
-2025-02-03,33,4,Sequía + Fertilizante,590.0,63.5,7.2,Hojas levemente caídas,test_set/Frente/7.png
-2025-02-06,36,1,Control,642.1,96.4,6.1,Saludable,test_set/Frente/7.png
-2025-02-06,36,2,Sequía,553.2,52.6,7.5,Saludable,test_set/Frente/7.png
-2025-02-06,36,3,Fertilizante,744.0,131.1,7.5,Saludable,test_set/Frente/7.png
-2025-02-06,36,4,Sequía + Fertilizante,583.7,71.1,6.1,Hojas levemente caídas,test_set/Frente/7.png
-2025-02-09,39,1,Control,680.4,107.4,7.3,Saludable,test_set/Frente/8.png
-2025-02-09,39,2,Sequía,568.2,58.7,6.3,Hojas levemente caídas,test_set/Frente/8.png
-2025-02-09,39,3,Fertilizante,778.5,142.3,6.4,Saludable,test_set/Frente/8.png
-2025-02-09,39,4,Sequía + Fertilizante,596.7,77.8,7.4,Hojas levemente caídas,test_set/Frente/8.png
-2025-02-12,42,1,Control,694.7,115.8,6.5,Saludable,test_set/Frente/8.png
-2025-02-12,42,2,Sequía,591.4,63.3,7.3,Hojas levemente caídas,test_set/Frente/8.png
-2025-02-12,42,3,Fertilizante,773.4,152.4,7.2,Saludable,test_set/Frente/8.png
-2025-02-12,42,4,Sequía + Fertilizante,616.7,86.0,7.0,Hojas levemente caídas,test_set/Frente/8.png
-2025-02-15,45,1,Control,746.7,123.6,7.1,Saludable,test_set/Frente/9.png
-2025-02-15,45,2,Sequía,611.7,68.6,6.6,Hojas levemente caídas,test_set/Frente/9.png
-2025-02-15,45,3,Fertilizante,792.9,160.0,6.1,Saludable,test_set/Frente/9.png
-2025-02-15,45,4,Sequía + Fertilizante,669.7,91.4,6.1,Saludable,test_set/Frente/9.png
-2025-02-18,48,1,Control,732.6,128.0,6.0,Saludable,test_set/Frente/9.png
-2025-02-18,48,2,Sequía,636.9,74.3,6.2,Saludable,test_set/Frente/9.png
-2025-02-18,48,3,Fertilizante,804.6,164.6,7.1,Saludable,test_set/Frente/9.png
-2025-02-18,48,4,Sequía + Fertilizante,666.3,96.8,6.7,Hojas levemente caídas,test_set/Frente/9.png
-2025-02-21,51,1,Control,778.8,134.2,6.5,Saludable,test_set/Frente/10.png
-2025-02-21,51,2,Sequía,623.2,77.7,6.7,Saludable,test_set/Frente/10.png
-2025-02-21,51,3,Fertilizante,832.7,168.9,7.3,Saludable,test_set/Frente/10.png
-2025-02-21,51,4,Sequía + Fertilizante,668.0,101.9,6.2,Saludable,test_set/Frente/10.png
-2025-02-24,54,1,Control,760.5,137.4,7.4,Saludable,test_set/Frente/10.png
-2025-02-24,54,2,Sequía,634.0,83.0,6.2,Hojas levemente caídas,test_set/Frente/10.png
-2025-02-24,54,3,Fertilizante,821.6,171.9,7.2,Saludable,test_set/Frente/10.png
-2025-02-24,54,4,Sequía + Fertilizante,686.1,106.2,7.2,Hojas levemente caídas,test_set/Frente/10.png
-2025-02-27,57,1,Control,790.4,140.1,6.6,Saludable,test_set/Frente/11.png
-2025-02-27,57,2,Sequía,661.8,85.4,6.9,Saludable,test_set/Frente/11.png
-2025-02-27,57,3,Fertilizante,831.6,175.3,6.8,Saludable,test_set/Frente/11.png
-2025-02-27,57,4,Sequía + Fertilizante,692.4,109.2,6.7,Saludable,test_set/Frente/11.png
-2025-03-02,60,1,Control,799.0,142.0,6.8,Saludable,test_set/Frente/12.png
-2025-03-02,60,2,Sequía,656.9,88.8,7.1,Hojas levemente caídas,test_set/Frente/12.png
-2025-03-02,60,3,Fertilizante,829.2,175.5,6.8,Saludable,test_set/Frente/12.png
-2025-03-02,60,4,Sequía + Fertilizante,701.7,110.8,6.4,Saludable,test_set/Frente/12.png
+2025-01-01,0,1,Control,516.7,6.5,6.8,Saludable,test_set/Frente/1.png
+2025-01-01,0,2,Sequía,484.5,6.2,6.9,Saludable,test_set/Frente/1.png
+2025-01-01,0,3,Fertilizante,495.5,6.6,6.7,Saludable,test_set/Frente/1.png
+2025-01-01,0,4,Sequía + Fertilizante,485.7,7.3,6.1,Saludable,test_set/Frente/1.png
+2025-01-02,1,1,Control,511.3,8.5,7.2,Saludable,test_set/Frente/1.png
+2025-01-02,1,2,Sequía,512.5,7.0,7.4,Saludable,test_set/Frente/1.png
+2025-01-02,1,3,Fertilizante,492.9,6.2,7.1,Saludable,test_set/Frente/1.png
+2025-01-02,1,4,Sequía + Fertilizante,497.7,6.8,7.2,Saludable,test_set/Frente/1.png
+2025-01-03,2,1,Control,520.1,8.9,6.5,Saludable,test_set/Frente/1.png
+2025-01-03,2,2,Sequía,494.0,6.8,6.6,Saludable,test_set/Frente/1.png
+2025-01-03,2,3,Fertilizante,516.6,6.7,7.1,Saludable,test_set/Frente/1.png
+2025-01-03,2,4,Sequía + Fertilizante,511.9,7.5,6.6,Saludable,test_set/Frente/1.png
+2025-01-04,3,1,Control,505.3,9.0,6.8,Saludable,test_set/Frente/1.png
+2025-01-04,3,2,Sequía,510.5,7.0,6.2,Saludable,test_set/Frente/1.png
+2025-01-04,3,3,Fertilizante,489.9,8.9,6.9,Saludable,test_set/Frente/1.png
+2025-01-04,3,4,Sequía + Fertilizante,516.4,8.7,6.8,Saludable,test_set/Frente/1.png
+2025-01-05,4,1,Control,526.4,10.1,6.9,Saludable,test_set/Frente/1.png
+2025-01-05,4,2,Sequía,524.5,7.8,7.3,Saludable,test_set/Frente/1.png
+2025-01-05,4,3,Fertilizante,494.4,8.8,6.6,Saludable,test_set/Frente/1.png
+2025-01-05,4,4,Sequía + Fertilizante,510.3,8.0,6.8,Saludable,test_set/Frente/1.png
+2025-01-06,5,1,Control,526.4,11.1,6.5,Saludable,test_set/Frente/1.png
+2025-01-06,5,2,Sequía,521.3,8.1,7.3,Saludable,test_set/Frente/1.png
+2025-01-06,5,3,Fertilizante,497.9,10.9,6.6,Saludable,test_set/Frente/1.png
+2025-01-06,5,4,Sequía + Fertilizante,525.5,9.8,7.4,Saludable,test_set/Frente/1.png
+2025-01-07,6,1,Control,492.3,12.1,7.4,Saludable,test_set/Frente/2.png
+2025-01-07,6,2,Sequía,519.4,8.3,7.3,Saludable,test_set/Frente/2.png
+2025-01-07,6,3,Fertilizante,507.3,12.7,6.9,Saludable,test_set/Frente/2.png
+2025-01-07,6,4,Sequía + Fertilizante,511.6,11.4,7.2,Saludable,test_set/Frente/2.png
+2025-01-08,7,1,Control,522.9,13.0,6.8,Saludable,test_set/Frente/2.png
+2025-01-08,7,2,Sequía,498.9,10.4,7.2,Saludable,test_set/Frente/2.png
+2025-01-08,7,3,Fertilizante,512.2,12.9,6.5,Saludable,test_set/Frente/2.png
+2025-01-08,7,4,Sequía + Fertilizante,511.6,11.2,6.1,Saludable,test_set/Frente/2.png
+2025-01-09,8,1,Control,493.6,14.7,6.6,Saludable,test_set/Frente/2.png
+2025-01-09,8,2,Sequía,505.7,10.6,7.5,Saludable,test_set/Frente/2.png
+2025-01-09,8,3,Fertilizante,496.2,15.1,7.1,Saludable,test_set/Frente/2.png
+2025-01-09,8,4,Sequía + Fertilizante,504.0,11.5,7.3,Saludable,test_set/Frente/2.png
+2025-01-10,9,1,Control,500.7,16.5,6.2,Saludable,test_set/Frente/2.png
+2025-01-10,9,2,Sequía,523.5,10.2,6.8,Saludable,test_set/Frente/2.png
+2025-01-10,9,3,Fertilizante,498.1,16.4,7.5,Saludable,test_set/Frente/2.png
+2025-01-10,9,4,Sequía + Fertilizante,521.7,14.0,6.9,Saludable,test_set/Frente/2.png
+2025-01-11,10,1,Control,506.1,17.5,7.1,Saludable,test_set/Frente/2.png
+2025-01-11,10,2,Sequía,510.4,12.7,7.4,Saludable,test_set/Frente/2.png
+2025-01-11,10,3,Fertilizante,504.3,19.4,7.2,Saludable,test_set/Frente/2.png
+2025-01-11,10,4,Sequía + Fertilizante,491.8,13.7,7.3,Saludable,test_set/Frente/2.png
+2025-01-12,11,1,Control,506.8,20.2,7.3,Saludable,test_set/Frente/3.png
+2025-01-12,11,2,Sequía,495.9,13.0,6.4,Saludable,test_set/Frente/3.png
+2025-01-12,11,3,Fertilizante,513.4,20.7,6.6,Saludable,test_set/Frente/3.png
+2025-01-12,11,4,Sequía + Fertilizante,510.4,15.0,7.3,Saludable,test_set/Frente/3.png
+2025-01-13,12,1,Control,535.9,20.4,7.0,Saludable,test_set/Frente/3.png
+2025-01-13,12,2,Sequía,505.1,12.9,7.3,Saludable,test_set/Frente/3.png
+2025-01-13,12,3,Fertilizante,522.7,23.9,6.8,Saludable,test_set/Frente/3.png
+2025-01-13,12,4,Sequía + Fertilizante,507.6,16.2,6.8,Saludable,test_set/Frente/3.png
+2025-01-14,13,1,Control,534.8,22.4,7.1,Saludable,test_set/Frente/3.png
+2025-01-14,13,2,Sequía,523.1,15.4,6.7,Saludable,test_set/Frente/3.png
+2025-01-14,13,3,Fertilizante,514.0,25.8,6.7,Saludable,test_set/Frente/3.png
+2025-01-14,13,4,Sequía + Fertilizante,494.1,17.5,6.8,Saludable,test_set/Frente/3.png
+2025-01-15,14,1,Control,541.1,24.3,6.6,Saludable,test_set/Frente/3.png
+2025-01-15,14,2,Sequía,522.1,15.3,6.0,Saludable,test_set/Frente/3.png
+2025-01-15,14,3,Fertilizante,539.1,28.2,6.7,Saludable,test_set/Frente/3.png
+2025-01-15,14,4,Sequía + Fertilizante,523.6,20.1,6.7,Saludable,test_set/Frente/3.png
+2025-01-16,15,1,Control,509.5,27.3,6.9,Saludable,test_set/Frente/3.png
+2025-01-16,15,2,Sequía,517.1,16.8,6.4,Saludable,test_set/Frente/3.png
+2025-01-16,15,3,Fertilizante,528.0,30.7,6.0,Saludable,test_set/Frente/3.png
+2025-01-16,15,4,Sequía + Fertilizante,507.5,21.1,6.6,Saludable,test_set/Frente/3.png
+2025-01-17,16,1,Control,517.4,30.6,6.5,Saludable,test_set/Frente/3.png
+2025-01-17,16,2,Sequía,528.7,17.8,7.2,Saludable,test_set/Frente/3.png
+2025-01-17,16,3,Fertilizante,528.4,34.8,6.7,Saludable,test_set/Frente/3.png
+2025-01-17,16,4,Sequía + Fertilizante,523.8,23.2,6.6,Saludable,test_set/Frente/3.png
+2025-01-18,17,1,Control,542.2,32.7,6.7,Saludable,test_set/Frente/4.png
+2025-01-18,17,2,Sequía,533.2,20.0,7.1,Saludable,test_set/Frente/4.png
+2025-01-18,17,3,Fertilizante,534.0,37.9,6.8,Saludable,test_set/Frente/4.png
+2025-01-18,17,4,Sequía + Fertilizante,503.2,25.6,6.0,Saludable,test_set/Frente/4.png
+2025-01-19,18,1,Control,537.4,34.1,6.8,Saludable,test_set/Frente/4.png
+2025-01-19,18,2,Sequía,525.5,19.9,6.5,Saludable,test_set/Frente/4.png
+2025-01-19,18,3,Fertilizante,547.4,41.4,6.5,Saludable,test_set/Frente/4.png
+2025-01-19,18,4,Sequía + Fertilizante,503.3,25.9,6.6,Saludable,test_set/Frente/4.png
+2025-01-20,19,1,Control,527.4,37.9,6.2,Saludable,test_set/Frente/4.png
+2025-01-20,19,2,Sequía,508.2,21.0,6.7,Saludable,test_set/Frente/4.png
+2025-01-20,19,3,Fertilizante,557.7,45.9,6.9,Saludable,test_set/Frente/4.png
+2025-01-20,19,4,Sequía + Fertilizante,520.3,28.8,7.4,Saludable,test_set/Frente/4.png
+2025-01-21,20,1,Control,530.7,40.7,7.0,Saludable,test_set/Frente/4.png
+2025-01-21,20,2,Sequía,535.7,22.3,6.5,Saludable,test_set/Frente/4.png
+2025-01-21,20,3,Fertilizante,536.6,49.0,6.7,Saludable,test_set/Frente/4.png
+2025-01-21,20,4,Sequía + Fertilizante,509.5,30.0,6.6,Saludable,test_set/Frente/4.png
+2025-01-22,21,1,Control,529.1,43.4,6.6,Saludable,test_set/Frente/4.png
+2025-01-22,21,2,Sequía,511.9,24.2,7.4,Saludable,test_set/Frente/4.png
+2025-01-22,21,3,Fertilizante,568.1,53.7,7.4,Saludable,test_set/Frente/4.png
+2025-01-22,21,4,Sequía + Fertilizante,512.6,32.3,7.4,Saludable,test_set/Frente/4.png
+2025-01-23,22,1,Control,555.5,46.8,6.2,Saludable,test_set/Frente/5.png
+2025-01-23,22,2,Sequía,538.1,26.7,6.6,Saludable,test_set/Frente/5.png
+2025-01-23,22,3,Fertilizante,582.9,58.0,6.6,Saludable,test_set/Frente/5.png
+2025-01-23,22,4,Sequía + Fertilizante,550.4,33.8,6.5,Saludable,test_set/Frente/5.png
+2025-01-24,23,1,Control,560.8,48.9,6.0,Saludable,test_set/Frente/5.png
+2025-01-24,23,2,Sequía,518.8,26.8,7.2,Saludable,test_set/Frente/5.png
+2025-01-24,23,3,Fertilizante,589.9,62.9,6.9,Saludable,test_set/Frente/5.png
+2025-01-24,23,4,Sequía + Fertilizante,546.6,36.8,6.4,Saludable,test_set/Frente/5.png
+2025-01-25,24,1,Control,554.3,52.2,6.2,Saludable,test_set/Frente/5.png
+2025-01-25,24,2,Sequía,530.7,28.9,7.3,Saludable,test_set/Frente/5.png
+2025-01-25,24,3,Fertilizante,598.7,68.4,6.3,Saludable,test_set/Frente/5.png
+2025-01-25,24,4,Sequía + Fertilizante,531.8,38.9,6.2,Saludable,test_set/Frente/5.png
+2025-01-26,25,1,Control,568.7,56.8,7.2,Saludable,test_set/Frente/5.png
+2025-01-26,25,2,Sequía,540.0,30.5,7.1,Saludable,test_set/Frente/5.png
+2025-01-26,25,3,Fertilizante,582.7,73.7,6.4,Saludable,test_set/Frente/5.png
+2025-01-26,25,4,Sequía + Fertilizante,551.6,41.2,7.2,Saludable,test_set/Frente/5.png
+2025-01-27,26,1,Control,587.4,60.6,6.6,Saludable,test_set/Frente/5.png
+2025-01-27,26,2,Sequía,532.0,32.4,6.6,Saludable,test_set/Frente/5.png
+2025-01-27,26,3,Fertilizante,594.5,79.6,6.8,Saludable,test_set/Frente/5.png
+2025-01-27,26,4,Sequía + Fertilizante,533.0,44.9,6.1,Hojas levemente caídas,test_set/Frente/5.png
+2025-01-28,27,1,Control,597.9,62.9,6.8,Saludable,test_set/Frente/5.png
+2025-01-28,27,2,Sequía,548.8,34.1,6.5,Saludable,test_set/Frente/5.png
+2025-01-28,27,3,Fertilizante,618.3,83.7,6.5,Saludable,test_set/Frente/5.png
+2025-01-28,27,4,Sequía + Fertilizante,558.8,45.8,6.6,Hojas levemente caídas,test_set/Frente/5.png
+2025-01-29,28,1,Control,590.8,67.1,6.1,Saludable,test_set/Frente/6.png
+2025-01-29,28,2,Sequía,535.6,36.4,6.8,Saludable,test_set/Frente/6.png
+2025-01-29,28,3,Fertilizante,630.2,89.1,6.2,Saludable,test_set/Frente/6.png
+2025-01-29,28,4,Sequía + Fertilizante,537.2,49.7,6.8,Hojas levemente caídas,test_set/Frente/6.png
+2025-01-30,29,1,Control,581.6,71.6,7.0,Saludable,test_set/Frente/6.png
+2025-01-30,29,2,Sequía,543.5,39.0,7.0,Saludable,test_set/Frente/6.png
+2025-01-30,29,3,Fertilizante,643.7,95.1,6.2,Saludable,test_set/Frente/6.png
+2025-01-30,29,4,Sequía + Fertilizante,551.1,51.9,6.6,Saludable,test_set/Frente/6.png
+2025-01-31,30,1,Control,615.2,74.0,7.0,Saludable,test_set/Frente/6.png
+2025-01-31,30,2,Sequía,548.1,39.9,6.1,Hojas levemente caídas,test_set/Frente/6.png
+2025-01-31,30,3,Fertilizante,641.6,100.0,6.4,Saludable,test_set/Frente/6.png
+2025-01-31,30,4,Sequía + Fertilizante,552.9,55.2,6.5,Hojas levemente caídas,test_set/Frente/6.png
+2025-02-01,31,1,Control,628.3,79.1,6.2,Saludable,test_set/Frente/6.png
+2025-02-01,31,2,Sequía,571.9,42.0,6.6,Hojas levemente caídas,test_set/Frente/6.png
+2025-02-01,31,3,Fertilizante,651.6,105.4,6.3,Saludable,test_set/Frente/6.png
+2025-02-01,31,4,Sequía + Fertilizante,573.1,57.0,7.4,Hojas levemente caídas,test_set/Frente/6.png
+2025-02-02,32,1,Control,622.3,82.9,6.4,Saludable,test_set/Frente/6.png
+2025-02-02,32,2,Sequía,567.0,44.9,6.1,Saludable,test_set/Frente/6.png
+2025-02-02,32,3,Fertilizante,662.5,111.1,6.1,Saludable,test_set/Frente/6.png
+2025-02-02,32,4,Sequía + Fertilizante,563.9,61.0,7.1,Saludable,test_set/Frente/6.png
+2025-02-03,33,1,Control,647.8,86.0,6.3,Saludable,test_set/Frente/7.png
+2025-02-03,33,2,Sequía,541.5,45.6,7.3,Hojas levemente caídas,test_set/Frente/7.png
+2025-02-03,33,3,Fertilizante,686.9,116.1,6.2,Saludable,test_set/Frente/7.png
+2025-02-03,33,4,Sequía + Fertilizante,560.5,61.8,6.3,Saludable,test_set/Frente/7.png
+2025-02-04,34,1,Control,632.1,90.8,7.0,Saludable,test_set/Frente/7.png
+2025-02-04,34,2,Sequía,560.2,48.9,6.3,Saludable,test_set/Frente/7.png
+2025-02-04,34,3,Fertilizante,713.5,120.7,7.3,Saludable,test_set/Frente/7.png
+2025-02-04,34,4,Sequía + Fertilizante,604.3,65.3,6.4,Saludable,test_set/Frente/7.png
+2025-02-05,35,1,Control,644.2,93.2,6.2,Saludable,test_set/Frente/7.png
+2025-02-05,35,2,Sequía,550.4,50.9,6.1,Saludable,test_set/Frente/7.png
+2025-02-05,35,3,Fertilizante,705.0,125.0,6.6,Saludable,test_set/Frente/7.png
+2025-02-05,35,4,Sequía + Fertilizante,572.8,67.2,7.1,Saludable,test_set/Frente/7.png
+2025-02-06,36,1,Control,674.2,97.5,6.7,Saludable,test_set/Frente/7.png
+2025-02-06,36,2,Sequía,577.8,51.7,6.5,Saludable,test_set/Frente/7.png
+2025-02-06,36,3,Fertilizante,725.3,130.7,6.4,Saludable,test_set/Frente/7.png
+2025-02-06,36,4,Sequía + Fertilizante,608.5,69.9,7.2,Hojas levemente caídas,test_set/Frente/7.png
+2025-02-07,37,1,Control,673.1,100.6,6.5,Saludable,test_set/Frente/7.png
+2025-02-07,37,2,Sequía,569.6,54.7,6.2,Hojas levemente caídas,test_set/Frente/7.png
+2025-02-07,37,3,Fertilizante,739.3,134.1,6.4,Saludable,test_set/Frente/7.png
+2025-02-07,37,4,Sequía + Fertilizante,610.4,73.2,7.2,Saludable,test_set/Frente/7.png
+2025-02-08,38,1,Control,681.0,104.0,6.7,Saludable,test_set/Frente/7.png
+2025-02-08,38,2,Sequía,573.8,55.4,6.2,Hojas levemente caídas,test_set/Frente/7.png
+2025-02-08,38,3,Fertilizante,758.2,138.7,6.3,Saludable,test_set/Frente/7.png
+2025-02-08,38,4,Sequía + Fertilizante,621.5,76.1,6.7,Hojas levemente caídas,test_set/Frente/7.png
+2025-02-09,39,1,Control,700.3,105.8,7.2,Saludable,test_set/Frente/8.png
+2025-02-09,39,2,Sequía,599.6,57.1,6.5,Saludable,test_set/Frente/8.png
+2025-02-09,39,3,Fertilizante,775.3,142.5,7.1,Saludable,test_set/Frente/8.png
+2025-02-09,39,4,Sequía + Fertilizante,598.6,78.8,6.1,Hojas levemente caídas,test_set/Frente/8.png
+2025-02-10,40,1,Control,676.3,110.2,6.5,Saludable,test_set/Frente/8.png
+2025-02-10,40,2,Sequía,586.2,59.6,6.9,Saludable,test_set/Frente/8.png
+2025-02-10,40,3,Fertilizante,781.9,144.9,7.5,Saludable,test_set/Frente/8.png
+2025-02-10,40,4,Sequía + Fertilizante,635.2,80.8,6.5,Saludable,test_set/Frente/8.png
+2025-02-11,41,1,Control,687.8,112.9,7.0,Saludable,test_set/Frente/8.png
+2025-02-11,41,2,Sequía,607.0,61.4,6.7,Hojas levemente caídas,test_set/Frente/8.png
+2025-02-11,41,3,Fertilizante,782.1,149.3,6.9,Saludable,test_set/Frente/8.png
+2025-02-11,41,4,Sequía + Fertilizante,619.7,83.6,6.5,Saludable,test_set/Frente/8.png
+2025-02-12,42,1,Control,704.2,115.6,7.4,Saludable,test_set/Frente/8.png
+2025-02-12,42,2,Sequía,616.0,64.1,6.1,Hojas levemente caídas,test_set/Frente/8.png
+2025-02-12,42,3,Fertilizante,766.2,151.2,6.8,Saludable,test_set/Frente/8.png
+2025-02-12,42,4,Sequía + Fertilizante,640.0,84.8,6.6,Saludable,test_set/Frente/8.png
+2025-02-13,43,1,Control,719.2,117.7,6.5,Saludable,test_set/Frente/8.png
+2025-02-13,43,2,Sequía,607.3,65.8,6.5,Saludable,test_set/Frente/8.png
+2025-02-13,43,3,Fertilizante,794.5,153.5,6.3,Saludable,test_set/Frente/8.png
+2025-02-13,43,4,Sequía + Fertilizante,652.3,88.4,6.6,Hojas levemente caídas,test_set/Frente/8.png
+2025-02-14,44,1,Control,721.9,120.8,7.1,Saludable,test_set/Frente/9.png
+2025-02-14,44,2,Sequía,597.2,66.9,6.2,Saludable,test_set/Frente/9.png
+2025-02-14,44,3,Fertilizante,789.3,156.8,7.3,Saludable,test_set/Frente/9.png
+2025-02-14,44,4,Sequía + Fertilizante,631.4,89.2,6.7,Saludable,test_set/Frente/9.png
+2025-02-15,45,1,Control,744.2,122.7,6.3,Saludable,test_set/Frente/9.png
+2025-02-15,45,2,Sequía,594.5,68.2,6.6,Saludable,test_set/Frente/9.png
+2025-02-15,45,3,Fertilizante,803.2,160.0,6.3,Saludable,test_set/Frente/9.png
+2025-02-15,45,4,Sequía + Fertilizante,662.9,90.6,7.3,Saludable,test_set/Frente/9.png
+2025-02-16,46,1,Control,735.4,124.4,6.3,Saludable,test_set/Frente/9.png
+2025-02-16,46,2,Sequía,598.5,71.1,6.0,Hojas levemente caídas,test_set/Frente/9.png
+2025-02-16,46,3,Fertilizante,823.8,161.1,7.2,Saludable,test_set/Frente/9.png
+2025-02-16,46,4,Sequía + Fertilizante,661.4,94.3,7.3,Saludable,test_set/Frente/9.png
+2025-02-17,47,1,Control,745.5,126.8,7.1,Saludable,test_set/Frente/9.png
+2025-02-17,47,2,Sequía,638.8,72.3,6.6,Hojas levemente caídas,test_set/Frente/9.png
+2025-02-17,47,3,Fertilizante,827.5,162.5,7.1,Saludable,test_set/Frente/9.png
+2025-02-17,47,4,Sequía + Fertilizante,673.9,95.5,6.8,Saludable,test_set/Frente/9.png
+2025-02-18,48,1,Control,767.1,128.2,7.0,Saludable,test_set/Frente/9.png
+2025-02-18,48,2,Sequía,638.7,73.5,6.9,Hojas levemente caídas,test_set/Frente/9.png
+2025-02-18,48,3,Fertilizante,821.8,165.4,6.3,Saludable,test_set/Frente/9.png
+2025-02-18,48,4,Sequía + Fertilizante,681.1,97.0,7.1,Saludable,test_set/Frente/9.png
+2025-02-19,49,1,Control,744.5,130.2,6.0,Saludable,test_set/Frente/9.png
+2025-02-19,49,2,Sequía,618.3,75.7,6.5,Saludable,test_set/Frente/9.png
+2025-02-19,49,3,Fertilizante,834.5,166.6,6.2,Saludable,test_set/Frente/9.png
+2025-02-19,49,4,Sequía + Fertilizante,682.6,99.5,6.2,Hojas levemente caídas,test_set/Frente/9.png
+2025-02-20,50,1,Control,775.4,132.5,6.5,Saludable,test_set/Frente/10.png
+2025-02-20,50,2,Sequía,632.9,77.5,6.1,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-20,50,3,Fertilizante,819.5,168.3,6.8,Saludable,test_set/Frente/10.png
+2025-02-20,50,4,Sequía + Fertilizante,670.0,100.8,6.8,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-21,51,1,Control,775.9,133.2,6.1,Saludable,test_set/Frente/10.png
+2025-02-21,51,2,Sequía,633.5,78.9,6.6,Saludable,test_set/Frente/10.png
+2025-02-21,51,3,Fertilizante,822.2,168.5,7.1,Saludable,test_set/Frente/10.png
+2025-02-21,51,4,Sequía + Fertilizante,687.5,102.4,7.2,Saludable,test_set/Frente/10.png
+2025-02-22,52,1,Control,758.6,134.6,6.6,Saludable,test_set/Frente/10.png
+2025-02-22,52,2,Sequía,626.6,79.9,6.7,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-22,52,3,Fertilizante,841.2,171.4,7.4,Saludable,test_set/Frente/10.png
+2025-02-22,52,4,Sequía + Fertilizante,679.7,103.6,6.2,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-23,53,1,Control,771.3,135.7,6.5,Saludable,test_set/Frente/10.png
+2025-02-23,53,2,Sequía,649.4,81.6,6.6,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-23,53,3,Fertilizante,817.4,172.3,6.3,Saludable,test_set/Frente/10.png
+2025-02-23,53,4,Sequía + Fertilizante,701.9,103.9,6.5,Saludable,test_set/Frente/10.png
+2025-02-24,54,1,Control,764.8,137.0,7.2,Saludable,test_set/Frente/10.png
+2025-02-24,54,2,Sequía,662.3,81.4,6.2,Saludable,test_set/Frente/10.png
+2025-02-24,54,3,Fertilizante,818.0,172.8,7.3,Saludable,test_set/Frente/10.png
+2025-02-24,54,4,Sequía + Fertilizante,694.6,104.5,7.5,Hojas levemente caídas,test_set/Frente/10.png
+2025-02-25,55,1,Control,759.0,137.7,6.4,Saludable,test_set/Frente/11.png
+2025-02-25,55,2,Sequía,660.9,83.9,6.2,Hojas levemente caídas,test_set/Frente/11.png
+2025-02-25,55,3,Fertilizante,836.1,173.4,6.8,Saludable,test_set/Frente/11.png
+2025-02-25,55,4,Sequía + Fertilizante,677.0,106.1,6.2,Hojas levemente caídas,test_set/Frente/11.png
+2025-02-26,56,1,Control,767.6,139.3,6.2,Saludable,test_set/Frente/11.png
+2025-02-26,56,2,Sequía,647.9,84.2,7.2,Hojas levemente caídas,test_set/Frente/11.png
+2025-02-26,56,3,Fertilizante,841.0,173.8,6.2,Saludable,test_set/Frente/11.png
+2025-02-26,56,4,Sequía + Fertilizante,691.6,107.9,6.8,Hojas levemente caídas,test_set/Frente/11.png
+2025-02-27,57,1,Control,778.4,140.5,6.4,Saludable,test_set/Frente/11.png
+2025-02-27,57,2,Sequía,651.9,85.6,7.3,Hojas levemente caídas,test_set/Frente/11.png
+2025-02-27,57,3,Fertilizante,854.9,175.5,6.0,Saludable,test_set/Frente/11.png
+2025-02-27,57,4,Sequía + Fertilizante,679.8,108.1,6.9,Saludable,test_set/Frente/11.png
+2025-02-28,58,1,Control,773.9,140.9,7.3,Saludable,test_set/Frente/11.png
+2025-02-28,58,2,Sequía,635.4,85.8,7.1,Saludable,test_set/Frente/11.png
+2025-02-28,58,3,Fertilizante,837.4,175.2,6.4,Saludable,test_set/Frente/11.png
+2025-02-28,58,4,Sequía + Fertilizante,704.5,108.9,6.5,Saludable,test_set/Frente/11.png
+2025-03-01,59,1,Control,800.3,141.3,6.8,Saludable,test_set/Frente/11.png
+2025-03-01,59,2,Sequía,676.5,86.7,7.4,Hojas levemente caídas,test_set/Frente/11.png
+2025-03-01,59,3,Fertilizante,835.6,176.4,6.1,Saludable,test_set/Frente/11.png
+2025-03-01,59,4,Sequía + Fertilizante,719.1,109.3,7.1,Hojas levemente caídas,test_set/Frente/11.png
+2025-03-02,60,1,Control,787.5,142.8,6.9,Saludable,test_set/Frente/12.png
+2025-03-02,60,2,Sequía,661.0,89.0,6.0,Hojas levemente caídas,test_set/Frente/12.png
+2025-03-02,60,3,Fertilizante,840.6,175.7,6.2,Saludable,test_set/Frente/12.png
+2025-03-02,60,4,Sequía + Fertilizante,719.3,112.0,7.1,Saludable,test_set/Frente/12.png

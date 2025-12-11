@@ -8,7 +8,7 @@ import os
 # Configuration
 START_DATE = datetime.date(2025, 1, 1)
 DURATION_DAYS = 60
-MEASUREMENT_INTERVAL_DAYS = 3
+MEASUREMENT_INTERVAL_DAYS = 1
 USER_ID = "user_simulated_001"
 EXPERIMENT_ID = "exp_simulated_001"
 
