@@ -1,0 +1,1031 @@
+[
+  {
+    "id": "entry_0",
+    "userId": "user_simulated_001",
+    "date": "2025-01-01",
+    "dayNumber": 0,
+    "pots": {
+      "1": {
+        "weight": 507.3,
+        "height": 6.1,
+        "visualStatus": "Saludable",
+        "ph": 6.5,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "2": {
+        "weight": 499.7,
+        "height": 5.5,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "3": {
+        "weight": 492.0,
+        "height": 6.8,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "4": {
+        "weight": 508.9,
+        "height": 7.2,
+        "visualStatus": "Saludable",
+        "ph": 6.7,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      }
+    },
+    "generalNotes": "Día 0: Fase de Germinación. Registro de rutina."
+  },
+  {
+    "id": "entry_3",
+    "userId": "user_simulated_001",
+    "date": "2025-01-04",
+    "dayNumber": 3,
+    "pots": {
+      "1": {
+        "weight": 526.2,
+        "height": 9.0,
+        "visualStatus": "Saludable",
+        "ph": 6.9,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "2": {
+        "weight": 506.3,
+        "height": 7.8,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "3": {
+        "weight": 521.5,
+        "height": 8.4,
+        "visualStatus": "Saludable",
+        "ph": 6.3,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      },
+      "4": {
+        "weight": 496.4,
+        "height": 8.9,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/1.png"
+        }
+      }
+    },
+    "generalNotes": "Día 3: Fase de Germinación. Registro de rutina."
+  },
+  {
+    "id": "entry_6",
+    "userId": "user_simulated_001",
+    "date": "2025-01-07",
+    "dayNumber": 6,
+    "pots": {
+      "1": {
+        "weight": 506.0,
+        "height": 13.4,
+        "visualStatus": "Saludable",
+        "ph": 6.0,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "2": {
+        "weight": 517.2,
+        "height": 9.1,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "3": {
+        "weight": 502.7,
+        "height": 11.9,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "4": {
+        "weight": 487.5,
+        "height": 9.9,
+        "visualStatus": "Saludable",
+        "ph": 6.9,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      }
+    },
+    "generalNotes": "Día 6: Fase de Germinación. Registro de rutina."
+  },
+  {
+    "id": "entry_9",
+    "userId": "user_simulated_001",
+    "date": "2025-01-10",
+    "dayNumber": 9,
+    "pots": {
+      "1": {
+        "weight": 516.0,
+        "height": 15.8,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "2": {
+        "weight": 499.3,
+        "height": 11.3,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "3": {
+        "weight": 528.1,
+        "height": 16.5,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      },
+      "4": {
+        "weight": 509.9,
+        "height": 13.0,
+        "visualStatus": "Saludable",
+        "ph": 7.2,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/2.png"
+        }
+      }
+    },
+    "generalNotes": "Día 9: Fase de Germinación. Registro de rutina."
+  },
+  {
+    "id": "entry_12",
+    "userId": "user_simulated_001",
+    "date": "2025-01-13",
+    "dayNumber": 12,
+    "pots": {
+      "1": {
+        "weight": 521.4,
+        "height": 21.9,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "2": {
+        "weight": 513.1,
+        "height": 13.8,
+        "visualStatus": "Saludable",
+        "ph": 7.4,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "3": {
+        "weight": 524.6,
+        "height": 23.0,
+        "visualStatus": "Saludable",
+        "ph": 7.4,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "4": {
+        "weight": 493.1,
+        "height": 17.7,
+        "visualStatus": "Saludable",
+        "ph": 6.3,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      }
+    },
+    "generalNotes": "Día 12: Fase de Primeras Hojas / Adaptación. Registro de rutina."
+  },
+  {
+    "id": "entry_15",
+    "userId": "user_simulated_001",
+    "date": "2025-01-16",
+    "dayNumber": 15,
+    "pots": {
+      "1": {
+        "weight": 508.1,
+        "height": 27.4,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "2": {
+        "weight": 513.1,
+        "height": 15.8,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "3": {
+        "weight": 529.8,
+        "height": 31.7,
+        "visualStatus": "Saludable",
+        "ph": 6.3,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      },
+      "4": {
+        "weight": 499.7,
+        "height": 20.5,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/3.png"
+        }
+      }
+    },
+    "generalNotes": "Día 15: Fase de Primeras Hojas / Adaptación. Registro de rutina."
+  },
+  {
+    "id": "entry_18",
+    "userId": "user_simulated_001",
+    "date": "2025-01-19",
+    "dayNumber": 18,
+    "pots": {
+      "1": {
+        "weight": 519.1,
+        "height": 35.4,
+        "visualStatus": "Saludable",
+        "ph": 6.7,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "2": {
+        "weight": 533.5,
+        "height": 19.8,
+        "visualStatus": "Saludable",
+        "ph": 7.0,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "3": {
+        "weight": 550.2,
+        "height": 40.7,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "4": {
+        "weight": 534.8,
+        "height": 25.9,
+        "visualStatus": "Saludable",
+        "ph": 6.7,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      }
+    },
+    "generalNotes": "Día 18: Fase de Primeras Hojas / Adaptación. Registro de rutina."
+  },
+  {
+    "id": "entry_21",
+    "userId": "user_simulated_001",
+    "date": "2025-01-22",
+    "dayNumber": 21,
+    "pots": {
+      "1": {
+        "weight": 551.2,
+        "height": 44.3,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "2": {
+        "weight": 529.7,
+        "height": 24.5,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "3": {
+        "weight": 552.5,
+        "height": 53.9,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      },
+      "4": {
+        "weight": 535.5,
+        "height": 32.4,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/4.png"
+        }
+      }
+    },
+    "generalNotes": "Día 21: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_24",
+    "userId": "user_simulated_001",
+    "date": "2025-01-25",
+    "dayNumber": 24,
+    "pots": {
+      "1": {
+        "weight": 579.5,
+        "height": 53.2,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "2": {
+        "weight": 515.6,
+        "height": 28.3,
+        "visualStatus": "Saludable",
+        "ph": 6.9,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "3": {
+        "weight": 571.7,
+        "height": 68.3,
+        "visualStatus": "Saludable",
+        "ph": 6.5,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "4": {
+        "weight": 521.4,
+        "height": 40.0,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      }
+    },
+    "generalNotes": "Día 24: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_27",
+    "userId": "user_simulated_001",
+    "date": "2025-01-28",
+    "dayNumber": 27,
+    "pots": {
+      "1": {
+        "weight": 565.7,
+        "height": 64.1,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "2": {
+        "weight": 525.0,
+        "height": 35.3,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.3,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "3": {
+        "weight": 612.5,
+        "height": 85.3,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      },
+      "4": {
+        "weight": 557.1,
+        "height": 46.0,
+        "visualStatus": "Saludable",
+        "ph": 6.4,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/5.png"
+        }
+      }
+    },
+    "generalNotes": "Día 27: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_30",
+    "userId": "user_simulated_001",
+    "date": "2025-01-31",
+    "dayNumber": 30,
+    "pots": {
+      "1": {
+        "weight": 617.0,
+        "height": 74.2,
+        "visualStatus": "Saludable",
+        "ph": 6.2,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/6.png"
+        }
+      },
+      "2": {
+        "weight": 531.0,
+        "height": 39.2,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.4,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/6.png"
+        }
+      },
+      "3": {
+        "weight": 642.0,
+        "height": 101.3,
+        "visualStatus": "Saludable",
+        "ph": 7.0,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/6.png"
+        }
+      },
+      "4": {
+        "weight": 582.8,
+        "height": 55.2,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/6.png"
+        }
+      }
+    },
+    "generalNotes": "Día 30: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_33",
+    "userId": "user_simulated_001",
+    "date": "2025-02-03",
+    "dayNumber": 33,
+    "pots": {
+      "1": {
+        "weight": 612.4,
+        "height": 85.8,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "2": {
+        "weight": 546.9,
+        "height": 46.2,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.4,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "3": {
+        "weight": 674.3,
+        "height": 116.2,
+        "visualStatus": "Saludable",
+        "ph": 7.0,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "4": {
+        "weight": 590.0,
+        "height": 63.5,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.2,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      }
+    },
+    "generalNotes": "Día 33: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_36",
+    "userId": "user_simulated_001",
+    "date": "2025-02-06",
+    "dayNumber": 36,
+    "pots": {
+      "1": {
+        "weight": 642.1,
+        "height": 96.4,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "2": {
+        "weight": 553.2,
+        "height": 52.6,
+        "visualStatus": "Saludable",
+        "ph": 7.5,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "3": {
+        "weight": 744.0,
+        "height": 131.1,
+        "visualStatus": "Saludable",
+        "ph": 7.5,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      },
+      "4": {
+        "weight": 583.7,
+        "height": 71.1,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.1,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/7.png"
+        }
+      }
+    },
+    "generalNotes": "Día 36: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_39",
+    "userId": "user_simulated_001",
+    "date": "2025-02-09",
+    "dayNumber": 39,
+    "pots": {
+      "1": {
+        "weight": 680.4,
+        "height": 107.4,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "2": {
+        "weight": 568.2,
+        "height": 58.7,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.3,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "3": {
+        "weight": 778.5,
+        "height": 142.3,
+        "visualStatus": "Saludable",
+        "ph": 6.4,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "4": {
+        "weight": 596.7,
+        "height": 77.8,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.4,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      }
+    },
+    "generalNotes": "Día 39: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_42",
+    "userId": "user_simulated_001",
+    "date": "2025-02-12",
+    "dayNumber": 42,
+    "pots": {
+      "1": {
+        "weight": 694.7,
+        "height": 115.8,
+        "visualStatus": "Saludable",
+        "ph": 6.5,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "2": {
+        "weight": 591.4,
+        "height": 63.3,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.3,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "3": {
+        "weight": 773.4,
+        "height": 152.4,
+        "visualStatus": "Saludable",
+        "ph": 7.2,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      },
+      "4": {
+        "weight": 616.7,
+        "height": 86.0,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.0,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/8.png"
+        }
+      }
+    },
+    "generalNotes": "Día 42: Fase de Crecimiento Vegetativo. Registro de rutina."
+  },
+  {
+    "id": "entry_45",
+    "userId": "user_simulated_001",
+    "date": "2025-02-15",
+    "dayNumber": 45,
+    "pots": {
+      "1": {
+        "weight": 746.7,
+        "height": 123.6,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "2": {
+        "weight": 611.7,
+        "height": 68.6,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.6,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "3": {
+        "weight": 792.9,
+        "height": 160.0,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "4": {
+        "weight": 669.7,
+        "height": 91.4,
+        "visualStatus": "Saludable",
+        "ph": 6.1,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      }
+    },
+    "generalNotes": "Día 45: Fase de Floración / Fructificación. Registro de rutina."
+  },
+  {
+    "id": "entry_48",
+    "userId": "user_simulated_001",
+    "date": "2025-02-18",
+    "dayNumber": 48,
+    "pots": {
+      "1": {
+        "weight": 732.6,
+        "height": 128.0,
+        "visualStatus": "Saludable",
+        "ph": 6.0,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "2": {
+        "weight": 636.9,
+        "height": 74.3,
+        "visualStatus": "Saludable",
+        "ph": 6.2,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "3": {
+        "weight": 804.6,
+        "height": 164.6,
+        "visualStatus": "Saludable",
+        "ph": 7.1,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      },
+      "4": {
+        "weight": 666.3,
+        "height": 96.8,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.7,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/9.png"
+        }
+      }
+    },
+    "generalNotes": "Día 48: Fase de Floración / Fructificación. Registro de rutina."
+  },
+  {
+    "id": "entry_51",
+    "userId": "user_simulated_001",
+    "date": "2025-02-21",
+    "dayNumber": 51,
+    "pots": {
+      "1": {
+        "weight": 778.8,
+        "height": 134.2,
+        "visualStatus": "Saludable",
+        "ph": 6.5,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "2": {
+        "weight": 623.2,
+        "height": 77.7,
+        "visualStatus": "Saludable",
+        "ph": 6.7,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "3": {
+        "weight": 832.7,
+        "height": 168.9,
+        "visualStatus": "Saludable",
+        "ph": 7.3,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "4": {
+        "weight": 668.0,
+        "height": 101.9,
+        "visualStatus": "Saludable",
+        "ph": 6.2,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      }
+    },
+    "generalNotes": "Día 51: Fase de Floración / Fructificación. Registro de rutina."
+  },
+  {
+    "id": "entry_54",
+    "userId": "user_simulated_001",
+    "date": "2025-02-24",
+    "dayNumber": 54,
+    "pots": {
+      "1": {
+        "weight": 760.5,
+        "height": 137.4,
+        "visualStatus": "Saludable",
+        "ph": 7.4,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "2": {
+        "weight": 634.0,
+        "height": 83.0,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 6.2,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "3": {
+        "weight": 821.6,
+        "height": 171.9,
+        "visualStatus": "Saludable",
+        "ph": 7.2,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      },
+      "4": {
+        "weight": 686.1,
+        "height": 106.2,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.2,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/10.png"
+        }
+      }
+    },
+    "generalNotes": "Día 54: Fase de Floración / Fructificación. Registro de rutina."
+  },
+  {
+    "id": "entry_57",
+    "userId": "user_simulated_001",
+    "date": "2025-02-27",
+    "dayNumber": 57,
+    "pots": {
+      "1": {
+        "weight": 790.4,
+        "height": 140.1,
+        "visualStatus": "Saludable",
+        "ph": 6.6,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/11.png"
+        }
+      },
+      "2": {
+        "weight": 661.8,
+        "height": 85.4,
+        "visualStatus": "Saludable",
+        "ph": 6.9,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/11.png"
+        }
+      },
+      "3": {
+        "weight": 831.6,
+        "height": 175.3,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/11.png"
+        }
+      },
+      "4": {
+        "weight": 692.4,
+        "height": 109.2,
+        "visualStatus": "Saludable",
+        "ph": 6.7,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/11.png"
+        }
+      }
+    },
+    "generalNotes": "Día 57: Fase de Floración / Fructificación. Registro de rutina."
+  },
+  {
+    "id": "entry_60",
+    "userId": "user_simulated_001",
+    "date": "2025-03-02",
+    "dayNumber": 60,
+    "pots": {
+      "1": {
+        "weight": 799.0,
+        "height": 142.0,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Control",
+        "images": {
+          "front": "test_set/Frente/12.png"
+        }
+      },
+      "2": {
+        "weight": 656.9,
+        "height": 88.8,
+        "visualStatus": "Hojas levemente caídas",
+        "ph": 7.1,
+        "notes": "Tratamiento: Sequía",
+        "images": {
+          "front": "test_set/Frente/12.png"
+        }
+      },
+      "3": {
+        "weight": 829.2,
+        "height": 175.5,
+        "visualStatus": "Saludable",
+        "ph": 6.8,
+        "notes": "Tratamiento: Fertilizante",
+        "images": {
+          "front": "test_set/Frente/12.png"
+        }
+      },
+      "4": {
+        "weight": 701.7,
+        "height": 110.8,
+        "visualStatus": "Saludable",
+        "ph": 6.4,
+        "notes": "Tratamiento: Sequía + Fertilizante",
+        "images": {
+          "front": "test_set/Frente/12.png"
+        }
+      }
+    },
+    "generalNotes": "Día 60: Fase de Floración / Fructificación. Registro de rutina."
+  }
+]
