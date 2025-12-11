@@ -85,6 +85,15 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
             // Solo notificamos al componente padre.
 
             if (authData.user) {
+                // 1. Claim the Kit explicitely (Trigger usually only handles Profile creation)
+                if (tempProfile.kitCode) {
+                    const claimed = await api.claimKit(tempProfile.kitCode, authData.user.id);
+                    if (!claimed) {
+                        console.error("Warning: Kit could not be automatically claimed. Retrying later or manual intervention needed.");
+                        // We don't block the flow, but it's an issue.
+                    }
+                }
+
                 const fullProfile: UserProfile = {
                     ...tempProfile as UserProfile,
                     id: authData.user.id,
@@ -99,7 +108,7 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                     role: 'user'
                 };
 
-                // No llamamos a api.createProfile manualmente para evitar error RLS
+                // No llamamos a api.createProfile manualmente para evitar error RLS (confiamos en el Trigger para Profile)
                 onComplete(fullProfile);
             }
         } catch (err: any) {
