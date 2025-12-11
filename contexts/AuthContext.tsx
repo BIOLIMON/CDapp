@@ -92,6 +92,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .single();
 
             if (data) {
+                // Check if profile is incomplete (e.g. created by trigger without kitCode for Google Auth)
+                if (!data.kit_code) {
+                    const pendingReg = localStorage.getItem('pending_registration');
+                    if (pendingReg) {
+                        try {
+                            console.log("Found incomplete profile and pending registration. Merging...");
+                            const pendingProfile = JSON.parse(pendingReg);
+
+                            // Merge DB profile with Pending Data
+                            const mergedProfile: UserProfile = {
+                                id: data.id,
+                                name: data.name || pendingProfile.name, // Prefer DB name if exists, else pending
+                                email: data.email || pendingProfile.email,
+                                kitCode: pendingProfile.kitCode, // This is what we are missing
+                                startDate: data.start_date || pendingProfile.startDate,
+                                role: data.role as 'user' | 'admin',
+                                score: data.score || 0,
+                                password: ''
+                            };
+
+                            // 1. Update Profile
+                            await api.createProfile(mergedProfile); // This is an upsert
+
+                            // 2. Claim Kit
+                            if (mergedProfile.kitCode) {
+                                await api.claimKit(mergedProfile.kitCode, userId);
+                            }
+
+                            // 3. Update Local State
+                            setUser(mergedProfile);
+                            localStorage.removeItem('pending_registration');
+                            return; // Done
+                        } catch (mergeError) {
+                            console.error("Error merging profile", mergeError);
+                        }
+                    }
+                }
+
                 const fullProfile: UserProfile = {
                     id: data.id,
                     name: data.name || '',
@@ -104,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 };
                 setUser(fullProfile);
             } else {
-                // Profile not found. Check if it's a new Google registration
+                // Profile not found. Check if it's a new Google registration (if Trigger didn't run or was deleted)
                 const pendingReg = localStorage.getItem('pending_registration');
                 if (pendingReg) {
                     try {
