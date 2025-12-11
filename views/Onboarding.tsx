@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, GlobalStats } from '../types';
 import { db } from '../services/db';
+import { api } from '../services/api';
 import { Sprout, QrCode, X, Droplets, FlaskConical, Users, ArrowRight, Leaf, Trophy, Camera, Shield, LogIn } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 
