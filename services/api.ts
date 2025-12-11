@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import { ExperimentEntry, UserProfile, GlobalStats } from '../types';
+import { ExperimentEntry, UserProfile, GlobalStats, Kit } from '../types';
 
 export const api = {
     // --- User / Profile ---
@@ -325,38 +325,60 @@ export const api = {
         return true;
     },
 
-    async uploadKits(kits: { code: string, batch_id: string }[], secret?: string): Promise<{ success: boolean, count?: number, error?: any }> {
-        if (secret) {
-            // Use RPC for System Admin (bypass)
-            const { data, error } = await supabase.rpc('admin_upload_kits', {
-                secret_key: secret,
-                kits_data: kits
-            });
+    async uploadKits(kits: { code: string, batch_id: string, kit_number?: string, variety?: string }[]): Promise<{ success: boolean, count?: number, error?: any }> {
+        // Use the new v2 RPC which is SECURITY DEFINER and ignores RLS, 
+        // while strictly checking for 'admin' role inside the DB.
+        const { data, error } = await supabase.rpc('admin_upload_kits_v2', {
+            kits_data: kits
+        });
 
-            if (error) {
-                console.error("RPC Error:", error);
-                return { success: false, error };
-            }
-            // Check application level error from RPC return
-            if (data && !data.success) {
-                return { success: false, error: { message: data.error } };
-            }
-            return { success: true, count: data.count || kits.length }; // Approx count if not returned exact
-
-        } else {
-            // Standard Authenticated Insert
-            const { data, error } = await supabase
-                .from('allowed_kits')
-                .upsert(kits, { onConflict: 'code', ignoreDuplicates: true }) // Ignore duplicates to prevent errors on existing codes
-                .select();
-
-            if (error) {
-                console.error("Error uploading kits", error);
-                return { success: false, count: 0, error };
-            }
-
-            return { success: true, count: data?.length || 0 };
+        if (error) {
+            console.error("RPC Error:", error);
+            return { success: false, error };
         }
+
+        // Check application level error from RPC return
+        if (data && !data.success) {
+            return { success: false, error: { message: data.error } };
+        }
+
+        return { success: true, count: data.count || kits.length };
+    },
+
+    async getAllKits(): Promise<Kit[]> {
+        const { data, error } = await supabase
+            .from('allowed_kits')
+            .select('*')
+            .order('id', { ascending: true }); // Assuming 'id' exists, or order by 'code'
+
+        if (error) throw error;
+        return data as Kit[] || [];
+    },
+
+    async updateKit(id: number | string, updates: Partial<Kit>): Promise<boolean> {
+        const { error } = await supabase
+            .from('allowed_kits')
+            .update(updates)
+            .eq('id', id);
+
+        if (error) {
+            console.error("Error updating kit", error);
+            return false;
+        }
+        return true;
+    },
+
+    async deleteKit(id: number | string): Promise<boolean> {
+        const { error } = await supabase
+            .from('allowed_kits')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error("Error deleting kit", error);
+            return false;
+        }
+        return true;
     },
 
     async getKitsStats(): Promise<{ total: number, claimed: number, available: number }> {

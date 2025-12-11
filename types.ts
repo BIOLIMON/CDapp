@@ -64,3 +64,15 @@ export interface GlobalStats {
   activeExperiments: number;
   leaderboard: { name: string; score: number }[];
 }
+
+export interface Kit {
+  id: number;
+  code: string;
+  status: 'available' | 'claimed';
+  claimed_by?: string;
+  claimed_at?: string;
+  batch_id?: string;
+  kit_number?: string;
+  variety?: string;
+  created_at?: string;
+}

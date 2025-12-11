@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { api } from '../services/api';
-import { UserProfile, ExperimentEntry } from '../types';
-import { Download, Users, FileText, Search, Upload, CheckCircle, AlertTriangle } from 'lucide-react';
+import { UserProfile, ExperimentEntry, Kit } from '../types';
+import { Download, Users, FileText, Search, Upload, CheckCircle, AlertTriangle, Edit, Trash2, Save, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import * as XLSX from 'xlsx';
 
@@ -13,6 +13,12 @@ const AdminPanel: React.FC = () => {
     const [kitStats, setKitStats] = useState({ total: 0, claimed: 0, available: 0 });
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Kit Management State
+    const [kits, setKits] = useState<Kit[]>([]);
+    const [editingKitId, setEditingKitId] = useState<string | number | null>(null);
+    const [editForm, setEditForm] = useState<any>({});
+    const [kitFilter, setKitFilter] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,6 +81,7 @@ const AdminPanel: React.FC = () => {
     useEffect(() => {
         if (activeTab === 'kits') {
             loadKitStats();
+            loadKits();
         }
     }, [activeTab]);
 
@@ -84,6 +91,15 @@ const AdminPanel: React.FC = () => {
             setKitStats(stats);
         } catch (error) {
             console.error("Error loading kit stats", error);
+        }
+    };
+
+    const loadKits = async () => {
+        try {
+            const data = await api.getAllKits();
+            setKits(data);
+        } catch (error) {
+            console.error("Error loading kits", error);
         }
     };
 
@@ -109,41 +125,40 @@ const AdminPanel: React.FC = () => {
                     return;
                 }
 
-                // Find column index for 'Código'
-                // User explicitly stated: 
-                // Col 0: N Caja
-                // Col 1: Codygo Unico
-                // Col 2: Variedad
+                // Indices based on User Request:
+                // Col 0: Kit Number (label)
+                // Col 1: Codygo Unico (code)
+                // Col 2: Variedad (variety)
+                const labelIndex = 0;
                 const codeIndex = 1;
-                console.log("Using fixed column index:", codeIndex);
+                const varietyIndex = 2;
 
                 // Extract codes
-                const codes = data.slice(1) // Skip header
-                    .map(row => row[codeIndex])
-                    .filter(cell => cell && (typeof cell === 'string' || typeof cell === 'number'))
-                    .map(cell => ({
-                        code: String(cell).trim().toUpperCase(),
+                const kitsToUpload = data.slice(1) // Skip header
+                    .filter(row => row[codeIndex] && (typeof row[codeIndex] === 'string' || typeof row[codeIndex] === 'number'))
+                    .map(row => ({
+                        code: String(row[codeIndex]).trim().toUpperCase(),
+                        kit_number: row[labelIndex] ? String(row[labelIndex]).trim() : undefined,
+                        variety: row[varietyIndex] ? String(row[varietyIndex]).trim() : undefined,
                         batch_id: `UPLOAD_${new Date().toISOString().split('T')[0]}`
                     }))
                     .filter(item => item.code.length > 2); // Basic filter
 
-                if (codes.length === 0) {
-                    alert("No se encontraron códigos en la columna 2 (índice 1).");
+                if (kitsToUpload.length === 0) {
+                    alert("No se encontraron códigos válidos en la columna 2.");
                     setIsUploading(false);
                     return;
                 }
 
-                // Debug log
-                console.log("Codes to upload:", codes.slice(0, 5));
-
-                if (confirm(`Se encontraron ${codes.length} códigos. ¿Desea importarlos a la base de datos?`)) {
-                    // Get secret if available (for System Admin mode)
-                    const secret = localStorage.getItem('admin_secret') || undefined;
-
-                    const result = await api.uploadKits(codes, secret);
+                if (confirm(`Se encontraron ${kitsToUpload.length} kits. ¿Desea importarlos a la base de datos?`)) {
+                    // Force using standard authenticated upsert to ensure new columns (kit_number, variety) are handled
+                    // effectively bypassing the potentially outdated RPC 'admin_upload_kits'
+                    const result = await api.uploadKits(kitsToUpload);
+                    
                     if (result.success) {
-                        alert(`Éxito: Se procesaron códigos.`);
+                        alert(`Éxito: Se procesaron ${result.count || kitsToUpload.length} registros.`);
                         loadKitStats();
+                        loadKits();
                     } else {
                         console.error("Upload error details:", result.error);
                         alert(`Error al subir kits: ${result.error?.message || JSON.stringify(result.error)}`);
@@ -159,6 +174,55 @@ const AdminPanel: React.FC = () => {
         };
         reader.readAsBinaryString(file);
     };
+
+    // Editor Handlers
+    const startEditing = (kit: any) => {
+        setEditingKitId(kit.id);
+        setEditForm({ ...kit });
+    };
+
+    const cancelEditing = () => {
+        setEditingKitId(null);
+        setEditForm({});
+    };
+
+    const saveKit = async () => {
+        if (!editingKitId) return;
+        try {
+            const success = await api.updateKit(editingKitId, editForm);
+            if (success) {
+                setKits(kits.map(k => k.id === editingKitId ? { ...k, ...editForm } : k));
+                setEditingKitId(null);
+                setEditForm({});
+            } else {
+                alert("Error al actualizar el kit.");
+            }
+        } catch (error) {
+            console.error("Error updating kit", error);
+            alert("Error al actualizar el kit.");
+        }
+    };
+
+    const deleteKit = async (id: number | string) => {
+        if (!confirm("¿Estás seguro de que deseas eliminar este kit? Esta acción no se puede deshacer.")) return;
+        try {
+            const success = await api.deleteKit(id);
+            if (success) {
+                setKits(kits.filter(k => k.id !== id));
+                loadKitStats();
+            } else {
+                alert("Error al eliminar el kit.");
+            }
+        } catch (error) {
+            console.error("Error deleting kit", error);
+        }
+    };
+
+    const filteredKits = kits.filter(k =>
+        (k.code || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
+        (k.kit_number || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
+        (k.variety || '').toLowerCase().includes(kitFilter.toLowerCase())
+    );
 
     return (
         <div className="p-4 space-y-6">
@@ -306,8 +370,10 @@ const AdminPanel: React.FC = () => {
                         <h3 className="text-xl font-bold text-gray-800 mb-2">Carga Masiva de Kits</h3>
                         <p className="text-gray-500 mb-6 max-w-lg mx-auto">
                             Sube el archivo Excel oficial (`.xlsx`) con los códigos de los kits.
-                            El sistema buscará los códigos en la <strong>primera columna</strong>.
-                            Los códigos duplicados serán ignorados.
+                            El sistema buscará: <br />
+                            <strong>Columna 1:</strong> Número de Kit (Etiqueta) <br />
+                            <strong>Columna 2:</strong> Código Único (Obligatorio) <br />
+                            <strong>Columna 3:</strong> Variedad de Tomate
                         </p>
 
                         <div className="flex justify-center">
@@ -329,6 +395,133 @@ const AdminPanel: React.FC = () => {
                                     <><Upload size={24} /> Subir Archivo Excel</>
                                 )}
                             </button>
+                        </div>
+                    </div>
+
+                    {/* Kit Table Editor */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-gray-800">Gestión de Kits</h3>
+                            <div className="relative">
+                                <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar kit, variedad o código..."
+                                    className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={kitFilter}
+                                    onChange={(e) => setKitFilter(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-gray-50 text-gray-500 font-medium">
+                                    <tr>
+                                        <th className="px-4 py-3">Código</th>
+                                        <th className="px-4 py-3">Etiqueta/Num</th>
+                                        <th className="px-4 py-3">Variedad</th>
+                                        <th className="px-4 py-3">Estado</th>
+                                        <th className="px-4 py-3 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {filteredKits.map(kit => (
+                                        <tr key={kit.id} className="hover:bg-gray-50">
+                                            {editingKitId === kit.id ? (
+                                                // Edit Mode
+                                                <>
+                                                    <td className="px-4 py-3">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full border rounded px-2 py-1"
+                                                            value={editForm.code}
+                                                            onChange={e => setEditForm({ ...editForm, code: e.target.value })}
+                                                        />
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full border rounded px-2 py-1"
+                                                            value={editForm.kit_number || ''}
+                                                            onChange={e => setEditForm({ ...editForm, kit_number: e.target.value })}
+                                                        />
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full border rounded px-2 py-1"
+                                                            value={editForm.variety || ''}
+                                                            onChange={e => setEditForm({ ...editForm, variety: e.target.value })}
+                                                        />
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <select
+                                                            className="w-full border rounded px-2 py-1 bg-white"
+                                                            value={editForm.status}
+                                                            onChange={e => setEditForm({ ...editForm, status: e.target.value })}
+                                                        >
+                                                            <option value="available">Disponible</option>
+                                                            <option value="claimed">Asignado</option>
+                                                        </select>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                                        <button
+                                                            onClick={saveKit}
+                                                            className="p-1 text-green-600 hover:bg-green-50 rounded"
+                                                            title="Guardar"
+                                                        >
+                                                            <Save size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={cancelEditing}
+                                                            className="p-1 text-gray-500 hover:bg-gray-100 rounded"
+                                                            title="Cancelar"
+                                                        >
+                                                            <X size={18} />
+                                                        </button>
+                                                    </td>
+                                                </>
+                                            ) : (
+                                                // View Mode
+                                                <>
+                                                    <td className="px-4 py-3 font-mono text-gray-600">{kit.code}</td>
+                                                    <td className="px-4 py-3">{kit.kit_number || '-'}</td>
+                                                    <td className="px-4 py-3">{kit.variety || '-'}</td>
+                                                    <td className="px-4 py-3">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${kit.status === 'claimed' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                                                            {kit.status === 'claimed' ? 'ASIGNADO' : 'DISPONIBLE'}
+                                                        </span>
+                                                        {kit.claimed_by && <span className="text-xs text-gray-400 ml-2 block truncate max-w-[100px]">{kit.claimed_by}</span>}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                                        <button
+                                                            onClick={() => startEditing(kit)}
+                                                            className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                                                            title="Editar"
+                                                        >
+                                                            <Edit size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => deleteKit(kit.id)}
+                                                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                                                            title="Eliminar"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </td>
+                                                </>
+                                            )}
+                                        </tr>
+                                    ))}
+                                    {filteredKits.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
+                                                No se encontraron kits.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
