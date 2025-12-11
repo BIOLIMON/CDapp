@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, GlobalStats } from '../types';
-import { db } from '../services/db';
+
 import { api } from '../services/api';
 import { Sprout, QrCode, X, Droplets, FlaskConical, Users, ArrowRight, Leaf, Trophy, Camera, Shield, LogIn } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
@@ -24,9 +24,16 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
     const formRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const globalData = db.getGlobalStats();
-        setStats(globalData);
-        setLeaderboard(globalData.leaderboard);
+        const fetchStats = async () => {
+            try {
+                const globalData = await api.getGlobalStats();
+                setStats(globalData);
+                setLeaderboard(globalData.leaderboard);
+            } catch (error) {
+                console.error("Error loading stats", error);
+            }
+        };
+        fetchStats();
     }, []);
 
     const scrollToForm = () => {

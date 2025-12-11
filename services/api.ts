@@ -137,17 +137,35 @@ export const api = {
 
     // --- Stats / Admin ---
 
+    // --- Stats / Admin ---
+
+    calculateScore(entries: ExperimentEntry[]): number {
+        let score = 0;
+
+        // 1. Quantity Points
+        score += entries.length * 100;
+
+        // 2. Photo Points
+        entries.forEach(entry => {
+            Object.values(entry.pots).forEach(pot => {
+                const img = pot.images || {};
+                if (img.front) score += 50;
+                if (img.top) score += 50;
+                if (img.profile) score += 50;
+            });
+        });
+
+        // 3. Consistency/Streak (Simplified)
+        if (entries.length > 5) score += 200;
+        if (entries.length > 10) score += 500;
+
+        return score;
+    },
+
     async updateScore(userId: string): Promise<number> {
-        // Calculate score based on entries (simplified logic similar to db.ts)
-        // For MVP, we can just increment or do a simple count query
-        // Let's do a simple count for now to save performance
-
-        const { count } = await supabase
-            .from('experiment_entries')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', userId);
-
-        const newScore = (count || 0) * 100; // Simplified scoring
+        // Calculate score based on actual entries and photos
+        const entries = await this.getUserEntries(userId);
+        const newScore = this.calculateScore(entries);
 
         await supabase
             .from('profiles')
@@ -157,6 +175,55 @@ export const api = {
         return newScore;
     },
 
+    async getGlobalStats(): Promise<GlobalStats> {
+        // 1. Total Users/Experiments
+        const { count: totalUsers } = await supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true });
+
+        // 2. Total Entries
+        const { count: totalEntries } = await supabase
+            .from('experiment_entries')
+            .select('*', { count: 'exact', head: true });
+
+        // 3. Total Photos
+        // Fetch only images column from pots to minimize data transfer
+        const { data: potsData } = await supabase
+            .from('pots')
+            .select('images');
+
+        let totalPhotos = 0;
+        if (potsData) {
+            potsData.forEach((p: any) => {
+                if (p.images) {
+                    // Count keys that correspond to valid photos
+                    const img = p.images;
+                    if (img.front) totalPhotos++;
+                    if (img.top) totalPhotos++;
+                    if (img.profile) totalPhotos++;
+                }
+            });
+        }
+
+        // 4. Leaderboard
+        const { data: topUsers } = await supabase
+            .from('profiles')
+            .select('name, score')
+            .order('score', { ascending: false })
+            .limit(3);
+
+        const leaderboard = topUsers
+            ? topUsers.map((u: any) => ({ name: u.name, score: u.score }))
+            : [];
+
+        return {
+            totalUsers: totalUsers || 0,
+            activeExperiments: totalUsers || 0,
+            totalEntries: totalEntries || 0,
+            totalPhotos,
+            leaderboard
+        };
+    },
     async getAllUsers(): Promise<UserProfile[]> {
         const { data, error } = await supabase
             .from('profiles')

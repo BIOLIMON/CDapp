@@ -62,4 +62,5 @@ export interface GlobalStats {
   totalEntries: number;
   totalPhotos: number;
   activeExperiments: number;
+  leaderboard: { name: string; score: number }[];
 }
