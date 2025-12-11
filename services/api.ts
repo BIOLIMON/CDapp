@@ -64,6 +64,19 @@ export const api = {
         return true;
     },
 
+    async revokeAdmin(userId: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('profiles')
+            .update({ role: 'user' })
+            .eq('id', userId);
+
+        if (error) {
+            console.error("Error revoking admin", error);
+            return false;
+        }
+        return true;
+    },
+
     // --- Entries ---
 
     async getUserEntries(userId: string): Promise<ExperimentEntry[]> {

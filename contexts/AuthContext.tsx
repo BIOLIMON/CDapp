@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                                 email: data.email || pendingProfile.email,
                                 kitCode: pendingProfile.kitCode, // This is what we are missing
                                 startDate: data.start_date || pendingProfile.startDate,
-                                role: data.role as 'user' | 'admin',
+                                role: data.role as 'user' | 'admin' | 'god',
                                 score: data.score || 0,
                                 password: ''
                             };
@@ -130,16 +130,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     }
                 }
 
+                console.log("DEBUG: Fetched Profile Data:", data);
                 const fullProfile: UserProfile = {
                     id: data.id,
                     name: data.name || '',
                     email: data.email || '',
                     kitCode: data.kit_code || '',
                     startDate: data.start_date || '',
-                    role: data.role as 'user' | 'admin',
+                    role: data.role as 'user' | 'admin' | 'god',
                     score: data.score || 0,
                     password: ''
                 };
+                console.log("DEBUG: Set User:", fullProfile);
                 setUser(fullProfile);
             } else {
                 // Profile not found. Check if it's a new Google registration (if Trigger didn't run or was deleted)

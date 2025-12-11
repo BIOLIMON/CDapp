@@ -12,6 +12,7 @@ import Header from './components/Header';
 import Login from './views/Login';
 import Register from './views/Register';
 import VerifyEmail from './views/VerifyEmail';
+import CompleteRegistration from './views/CompleteRegistration';
 
 import { useAuth } from './contexts/AuthContext';
 import { api } from './services/api';
@@ -35,7 +36,13 @@ export default function App() {
     const errorDesc = params.get('error_description') || hashParams.get('error_description');
 
     if (window.location.pathname === '/admin') {
-      setAuthStage('admin_login');
+      // Allow standard flow to handle auth state. 
+      // If unauthorized, onBoarding/Login will show. 
+      // If authorized, effect will redirect to admin view if role matches.
+      // We can force 'login' stage if not authed.
+      if (!user && !loading && authStage !== 'login') {
+        setAuthStage('login');
+      }
       return;
     }
 
@@ -48,7 +55,11 @@ export default function App() {
 
     if (user) {
       setAuthStage('authenticated');
-      loadEntries(user.id);
+      if (user.role === 'admin' || user.role === 'god') {
+        setCurrentView('admin');
+      } else {
+        loadEntries(user.id);
+      }
     } else {
       if (!loading && authStage !== 'admin_login') setAuthStage('landing');
     }
@@ -97,7 +108,7 @@ export default function App() {
 
   const handleLoginSuccess = (profile: UserProfile) => {
     // State update handled by AuthContext mostly, but we set view here
-    if (profile.role === 'admin') {
+    if (profile.role === 'admin' || profile.role === 'god') {
       setCurrentView('admin');
     } else {
       loadEntries(profile.id);
@@ -130,80 +141,7 @@ export default function App() {
     }
   };
 
-  const handleAdminSystemLogin = async (pwd: string) => {
-    if (pwd === 'ADMIN123') {
-      // 1. Try to promote real user if logged in
-      if (session?.user) {
-        const success = await api.promoteToAdmin(session.user.id);
-        if (success) {
-          alert("¡Cuenta promovida a Administrador! Recargando...");
-          window.location.reload(); // Reload to fetch new role
-          return;
-        } else {
-          console.warn("Could not promote user directly. Fallback to System Admin mode.");
-          // If promotion failed (RLS?), we fall back to fake user, but upload might fail if RPC missing.
-          // Alerting user to ensuring RPC is created or RLS allows it.
-        }
-      }
 
-      // 2. Fallback: System Admin (Fake User)
-      const adminUser: UserProfile = {
-        id: 'system-admin',
-        name: 'System Administrator',
-        email: 'admin@system.local',
-        kitCode: 'ADMIN-ACCESS',
-        role: 'admin',
-        startDate: new Date().toISOString(),
-        score: 0,
-        password: ''
-      };
-      // Store secret for API usage (RPC)
-      localStorage.setItem('admin_secret', 'ADMIN123');
-
-      handleLoginSuccess(adminUser);
-      setAuthStage('admin_authenticated');
-      setCurrentView('admin');
-    } else {
-      alert("Contraseña incorrecta");
-    }
-  };
-
-
-  // if (loading) return ... (Handled inside useAuth? No, useAuth gives loading state)
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-primary">Cargando...</div>;
-
-  // --- Render Logic based on AuthStage ---
-
-  if (authStage === 'admin_login') {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Acceso Administrativo</h2>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            const fd = new FormData(e.currentTarget);
-            handleAdminSystemLogin(fd.get('password') as string);
-          }}>
-            <div className="mb-4">
-              <label className="block text-sm font-bold mb-2 text-gray-700">Contraseña del Sistema</label>
-              <input type="password" name="password" className="w-full p-3 border rounded" autoFocus />
-            </div>
-            <button type="submit" className="w-full bg-gray-900 text-white font-bold py-3 rounded hover:bg-black transition">
-              Ingresar
-            </button>
-            <button type="button" onClick={() => { window.location.pathname = '/'; }} className="w-full mt-4 text-gray-500 text-sm hover:underline">
-              Volver al inicio
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  // Special case: Admin Authenticated via Bypass
-  if (authStage === 'admin_authenticated') {
-    return <AdminPanel />;
-  }
 
   if (authStage === 'landing') {
     return (
@@ -247,17 +185,12 @@ export default function App() {
   if (!user) {
     if (loading) return <div className="min-h-screen flex items-center justify-center text-primary">Cargando...</div>;
 
-    // If we are here, it means we have no user profile loaded.
-    // If we have a session (handled by AuthContext internals but not exposed as such fully effectively yet),
-    // AuthContext sets user to null.
-    // We should redirect to Landing/Onboarding to force them to register with a kit.
+    // Check if we have a session but no profile loaded yet? Or maybe AuthContext returns null user if profile is missing kit?
+    // Actually, create_user.js created a profile with kitCode='GOD-MODE-ENABLED', so user SHOULD be loaded.
+    // If not, it means AuthContext failed to fetch it or map it.
 
-    // Ideally we would check if they are "actually" logged in (have session) but no profile.
-    // Since we don't expose 'session' from AuthContext, we rely on the fact that if we were supposed to be logged in,
-    // we would have a user.
-    // So we just reset state to landing.
-
-    // However, to prevent infinite loops if something is really broken, we can show a special message or allows logout.
+    // However, if we enter here, we are essentially unauthenticated from the app's perspective.
+    // But if we are admins, we might have a partial profile or need to handle it.
 
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
@@ -268,7 +201,7 @@ export default function App() {
         <div className="flex flex-col gap-4 items-center">
           <button
             onClick={() => {
-              handleLogout(); // Ensure we clear supabase session
+              handleLogout();
               setAuthStage('landing');
             }}
             className="bg-primary text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-green-700"
@@ -277,6 +210,22 @@ export default function App() {
           </button>
         </div>
       </div>
+    );
+  }
+
+
+  const handleRegistrationCompleted = (newProfile: UserProfile) => {
+    // Force reload to ensure AuthContext picks up the new kit code from DB
+    window.location.reload();
+  };
+
+  // --- Strict Kit Enforcement ---
+  if (user.role === 'user' && !user.kitCode) {
+    return (
+      <CompleteRegistration
+        user={user}
+        onComplete={handleRegistrationCompleted}
+      />
     );
   }
 
@@ -291,7 +240,7 @@ export default function App() {
       case 'resources':
         return <Resources />;
       case 'admin':
-        return user.role === 'admin' ? <AdminPanel /> : <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
+        return (user.role === 'admin' || user.role === 'god') ? <AdminPanel /> : <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
       default:
         return <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
     }

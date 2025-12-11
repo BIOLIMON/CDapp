@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'admin';
+export type UserRole = 'user' | 'admin' | 'god';
 
 export type AuthStage = 'landing' | 'login' | 'register' | 'verify' | 'authenticated' | 'admin_login' | 'admin_authenticated';
 

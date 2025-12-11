@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { UserProfile, ExperimentEntry, Kit } from '../types';
 import { Download, Users, FileText, Search, Upload, CheckCircle, AlertTriangle, Edit, Trash2, Save, X } from 'lucide-react';
@@ -19,6 +20,9 @@ const AdminPanel: React.FC = () => {
     const [editingKitId, setEditingKitId] = useState<string | number | null>(null);
     const [editForm, setEditForm] = useState<any>({});
     const [kitFilter, setKitFilter] = useState('');
+
+    const { user: currentUser } = useAuth();
+    const isGod = currentUser?.role === 'god';
 
     useEffect(() => {
         const fetchData = async () => {
@@ -154,7 +158,7 @@ const AdminPanel: React.FC = () => {
                     // Force using standard authenticated upsert to ensure new columns (kit_number, variety) are handled
                     // effectively bypassing the potentially outdated RPC 'admin_upload_kits'
                     const result = await api.uploadKits(kitsToUpload);
-                    
+
                     if (result.success) {
                         alert(`Éxito: Se procesaron ${result.count || kitsToUpload.length} registros.`);
                         loadKitStats();
@@ -218,6 +222,32 @@ const AdminPanel: React.FC = () => {
         }
     };
 
+    const toggleAdminRole = async (user: UserProfile) => {
+        if (!isGod) return;
+
+        const isPromoting = user.role === 'user';
+        const action = isPromoting ? 'promover a Admin' : 'revocar permisos de Admin';
+
+        if (!confirm(`¿Estás seguro de que deseas ${action} a ${user.name}?`)) return;
+
+        try {
+            const success = isPromoting
+                ? await api.promoteToAdmin(user.id)
+                : await api.revokeAdmin(user.id);
+
+            if (success) {
+                // Update local state
+                setUsers(users.map(u => u.id === user.id ? { ...u, role: isPromoting ? 'admin' : 'user' } : u));
+                alert(`Usuario ${isPromoting ? 'promovido' : 'degradado'} con éxito.`);
+            } else {
+                alert("Error al cambiar el rol del usuario.");
+            }
+        } catch (error) {
+            console.error("Error toggling role", error);
+            alert("Error al cambiar el rol.");
+        }
+    };
+
     const filteredKits = kits.filter(k =>
         (k.code || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
         (k.kit_number || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
@@ -228,7 +258,14 @@ const AdminPanel: React.FC = () => {
         <div className="p-4 space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">Panel de Administración</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        Panel de Administración
+                        {isGod && (
+                            <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full border border-yellow-300 font-extrabold shadow-sm">
+                                GOD MODE
+                            </span>
+                        )}
+                    </h2>
                     <p className="text-gray-500 text-sm">Gestión de usuarios y datos del proyecto</p>
                 </div>
 
@@ -317,6 +354,7 @@ const AdminPanel: React.FC = () => {
                                         <th className="px-4 py-3">Rol</th>
                                         <th className="px-4 py-3 text-right">Puntaje</th>
                                         <th className="px-4 py-3 text-right">Fecha Inicio</th>
+                                        {isGod && <th className="px-4 py-3 text-right">Acciones</th>}
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -325,12 +363,30 @@ const AdminPanel: React.FC = () => {
                                             <td className="px-4 py-3 font-medium text-gray-900">{u.name}</td>
                                             <td className="px-4 py-3 font-mono text-gray-600">{u.kitCode}</td>
                                             <td className="px-4 py-3">
-                                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${u.role === 'god' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' :
+                                                    u.role === 'admin' ? 'bg-purple-100 text-purple-700' :
+                                                        'bg-green-100 text-green-700'
+                                                    }`}>
                                                     {u.role.toUpperCase()}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-right font-bold text-orange-600">{u.score}</td>
                                             <td className="px-4 py-3 text-right text-gray-500">{new Date(u.startDate).toLocaleDateString()}</td>
+                                            {isGod && (
+                                                <td className="px-4 py-3 text-right">
+                                                    {u.role !== 'god' && (
+                                                        <button
+                                                            onClick={() => toggleAdminRole(u)}
+                                                            className={`text-xs px-3 py-1 rounded-full border ${u.role === 'admin'
+                                                                    ? 'border-red-200 text-red-600 hover:bg-red-50'
+                                                                    : 'border-blue-200 text-blue-600 hover:bg-blue-50'
+                                                                }`}
+                                                        >
+                                                            {u.role === 'admin' ? 'Revocar Admin' : 'Hacer Admin'}
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
