@@ -8,13 +8,14 @@ interface EntryFormProps {
     user: UserProfile;
     onSave: (entry: ExperimentEntry) => void;
     onCancel: () => void;
+    initialEntry?: ExperimentEntry;
 }
 
-const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
+const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel, initialEntry }) => {
     const today = new Date().toISOString().split('T')[0];
-    const [date, setDate] = useState(today);
+    const [date, setDate] = useState(initialEntry ? initialEntry.date : today);
     const [activeTab, setActiveTab] = useState<PotId>('1');
-    const [generalNotes, setGeneralNotes] = useState('');
+    const [generalNotes, setGeneralNotes] = useState(initialEntry ? initialEntry.generalNotes : '');
 
     const initialPotData: PotData = {
         weight: '',
@@ -25,12 +26,26 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
         images: {}
     };
 
-    const [pots, setPots] = useState<{ [key in PotId]: PotData }>({
-        '1': { ...initialPotData },
-        '2': { ...initialPotData },
-        '3': { ...initialPotData },
-        '4': { ...initialPotData },
-    });
+    const getInitialPots = () => {
+        if (!initialEntry) {
+            return {
+                '1': { ...initialPotData },
+                '2': { ...initialPotData },
+                '3': { ...initialPotData },
+                '4': { ...initialPotData },
+            };
+        }
+        // Merge initialEntry pots with default structure (in case missing pots? unlikely)
+        // Ensure all 4 keys exist
+        return {
+            '1': initialEntry.pots['1'] || { ...initialPotData },
+            '2': initialEntry.pots['2'] || { ...initialPotData },
+            '3': initialEntry.pots['3'] || { ...initialPotData },
+            '4': initialEntry.pots['4'] || { ...initialPotData },
+        };
+    };
+
+    const [pots, setPots] = useState<{ [key in PotId]: PotData }>(getInitialPots());
 
     const calculateDayNumber = (entryDate: string) => {
         const start = new Date(user.startDate);
@@ -121,7 +136,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
         }
 
         const entry: ExperimentEntry = {
-            id: Date.now().toString(),
+            id: initialEntry ? initialEntry.id : Date.now().toString(),
             userId: user.id,
             date,
             dayNumber,
@@ -173,7 +188,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
                 <button type="button" onClick={onCancel} className="text-gray-500 hover:text-gray-700">
                     <X size={24} />
                 </button>
-                <h2 className="font-bold text-gray-800">Nuevo Registro (Día {dayNumber})</h2>
+                <h2 className="font-bold text-gray-800">{initialEntry ? `Editar Registro (Día ${dayNumber})` : `Nuevo Registro (Día ${dayNumber})`}</h2>
                 <button type="submit" className="text-primary font-bold flex items-center gap-1 hover:text-green-700">
                     <Save size={20} />
                     <span className="hidden sm:inline">Guardar</span>

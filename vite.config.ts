@@ -49,6 +49,17 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, '.'),
       }
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            supabase: ['@supabase/supabase-js'],
+            utils: ['lucide-react', 'recharts', 'react-markdown', 'html5-qrcode']
+          }
+        }
+      }
     }
   };
 });

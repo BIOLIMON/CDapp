@@ -16,6 +16,7 @@ import CompleteRegistration from './views/CompleteRegistration';
 
 import { useAuth } from './contexts/AuthContext';
 import { api } from './services/api';
+import { supabase } from './lib/supabase';
 
 export default function App() {
   const { user, session, loading } = useAuth();
@@ -119,7 +120,7 @@ export default function App() {
   };
 
   const handleLogout = async () => {
-    const { supabase } = await import('./lib/supabase');
+    // const { supabase } = await import('./lib/supabase');
     await supabase.auth.signOut();
     setEntries([]);
     setCurrentView('dashboard');

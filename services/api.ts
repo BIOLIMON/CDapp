@@ -124,6 +124,60 @@ export const api = {
         return this.updateScore(entry.userId); // Recalculate and return new score
     },
 
+    async updateEntry(entry: ExperimentEntry) {
+        // 1. Update Entry Details
+        const { error: entryError } = await supabase
+            .from('experiment_entries')
+            .update({
+                date: entry.date,
+                day_number: entry.dayNumber,
+                general_notes: entry.generalNotes
+            })
+            .eq('id', entry.id);
+
+        if (entryError) throw entryError;
+
+        // 2. Update Pots (Upsert)
+        // We assume we can identify pots by entry_id + pot_id. 
+        // We first need to check if we can upsert based on constraint.
+        // Assuming pots table has a unique constraint on (entry_id, pot_id).
+
+        const potRows = Object.entries(entry.pots).map(([potId, potData]) => ({
+            entry_id: entry.id,
+            pot_id: potId,
+            weight: parseFloat(String(potData.weight)) || 0,
+            height: parseFloat(String(potData.height)) || 0,
+            visual_status: potData.visualStatus,
+            ph: parseFloat(String(potData.ph)) || 0,
+            notes: potData.notes,
+            images: potData.images // JSONB
+        }));
+
+        // We use upsert. The conflict target should be inferred if there's a unique constraint.
+        // If not, we might need to rely on 'id' if we had it, but we don't store pot row id in frontend.
+        // Alternatively, delete all pots for this entry and re-insert logic? Safer for data integrity but heavier.
+        // Let's try upsert. If it fails, we know we need a constraint.
+        const { error: potsError } = await supabase
+            .from('pots')
+            .upsert(potRows, { onConflict: 'entry_id,pot_id' }); // Explicitly trying to use this constraint
+
+        if (potsError) throw potsError;
+
+        return this.updateScore(entry.userId);
+    },
+
+    async deleteEntry(entryId: string, userId: string) {
+        // Cascade delete should handle pots if configured in DB.
+        const { error } = await supabase
+            .from('experiment_entries')
+            .delete()
+            .eq('id', entryId);
+
+        if (error) throw error;
+
+        return this.updateScore(userId);
+    },
+
     // --- Stats / Admin ---
 
     // --- Stats / Admin ---

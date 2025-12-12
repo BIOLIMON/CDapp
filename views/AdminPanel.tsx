@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { UserProfile, ExperimentEntry, Kit } from '../types';
-import { Download, Users, FileText, Search, Upload, CheckCircle, AlertTriangle, Edit, Trash2, Save, X } from 'lucide-react';
+import { Download, Users, FileText, Search, Upload, CheckCircle, AlertTriangle, Edit, Trash2, Save, X, Eye } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import * as XLSX from 'xlsx';
+import AdminUserDetail from './AdminUserDetail';
 
 const AdminPanel: React.FC = () => {
     const [users, setUsers] = useState<UserProfile[]>([]);
@@ -20,6 +21,7 @@ const AdminPanel: React.FC = () => {
     const [editingKitId, setEditingKitId] = useState<string | number | null>(null);
     const [editForm, setEditForm] = useState<any>({});
     const [kitFilter, setKitFilter] = useState('');
+    const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
 
     const { user: currentUser } = useAuth();
     const isGod = currentUser?.role === 'god';
@@ -137,8 +139,8 @@ const AdminPanel: React.FC = () => {
                 const codeIndex = 1;
                 const varietyIndex = 2;
 
-                // Extract codes
-                const kitsToUpload = data.slice(1) // Skip header
+                // 1. Parse all potential rows
+                let candidates = data.slice(1) // Skip header
                     .filter(row => row[codeIndex] && (typeof row[codeIndex] === 'string' || typeof row[codeIndex] === 'number'))
                     .map(row => ({
                         code: String(row[codeIndex]).trim().toUpperCase(),
@@ -146,21 +148,64 @@ const AdminPanel: React.FC = () => {
                         variety: row[varietyIndex] ? String(row[varietyIndex]).trim() : undefined,
                         batch_id: `UPLOAD_${new Date().toISOString().split('T')[0]}`
                     }))
-                    .filter(item => item.code.length > 2); // Basic filter
+                    .filter(item => item.code.length > 2); // Basic validity check
 
-                if (kitsToUpload.length === 0) {
+                if (candidates.length === 0) {
                     alert("No se encontraron códigos válidos en la columna 2.");
                     setIsUploading(false);
                     return;
                 }
 
-                if (confirm(`Se encontraron ${kitsToUpload.length} kits. ¿Desea importarlos a la base de datos?`)) {
+                // 2. Internal Deduplication (within the file)
+                // We keep the first occurrence of a code or kit_number
+                const seenCodes = new Set<string>();
+                const seenNumbers = new Set<string>();
+                const uniqueCandidates: typeof candidates = [];
+
+                candidates.forEach(c => {
+                    const codeDuplicate = seenCodes.has(c.code);
+                    const numDuplicate = c.kit_number && seenNumbers.has(c.kit_number);
+
+                    if (!codeDuplicate && !numDuplicate) {
+                        seenCodes.add(c.code);
+                        if (c.kit_number) seenNumbers.add(c.kit_number);
+                        uniqueCandidates.push(c);
+                    }
+                });
+
+                // 3. External Deduplication (against Database)
+                // We use the 'kits' state which contains all current kits
+                const existingCodes = new Set(kits.map(k => k.code));
+                const existingNumbers = new Set(kits.map(k => k.kit_number).filter(Boolean) as string[]);
+
+                const finalKits = uniqueCandidates.filter(c => {
+                    const codeExists = existingCodes.has(c.code);
+                    const numExists = c.kit_number && existingNumbers.has(c.kit_number);
+                    return !codeExists && !numExists;
+                });
+
+                const duplicatesInFile = candidates.length - uniqueCandidates.length;
+                const duplicatesInDB = uniqueCandidates.length - finalKits.length;
+
+                if (finalKits.length === 0) {
+                    alert(`No hay kits nuevos para subir.\n\nTotal leídos: ${candidates.length}\nDuplicados en archivo: ${duplicatesInFile}\nYa existentes en DB: ${duplicatesInDB}`);
+                    setIsUploading(false);
+                    return;
+                }
+
+                const msg = `Análisis del archivo:\n` +
+                    `- Leídos: ${candidates.length}\n` +
+                    `- Duplicados internos (ignorados): ${duplicatesInFile}\n` +
+                    `- Ya en sistema (ignorados): ${duplicatesInDB}\n` +
+                    `- A subir (Nuevos): ${finalKits.length}`;
+
+                if (confirm(`${msg}\n\n¿Desea proceder con la carga de los ${finalKits.length} kits nuevos?`)) {
                     // Force using standard authenticated upsert to ensure new columns (kit_number, variety) are handled
                     // effectively bypassing the potentially outdated RPC 'admin_upload_kits'
-                    const result = await api.uploadKits(kitsToUpload);
+                    const result = await api.uploadKits(finalKits);
 
                     if (result.success) {
-                        alert(`Éxito: Se procesaron ${result.count || kitsToUpload.length} registros.`);
+                        alert(`Éxito: Se procesaron ${result.count || finalKits.length} registros.`);
                         loadKitStats();
                         loadKits();
                     } else {
@@ -228,7 +273,15 @@ const AdminPanel: React.FC = () => {
         (k.code || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
         (k.kit_number || '').toLowerCase().includes(kitFilter.toLowerCase()) ||
         (k.variety || '').toLowerCase().includes(kitFilter.toLowerCase())
-    );
+    ).sort((a, b) => {
+        const numA = parseInt(a.kit_number || '0', 10);
+        const numB = parseInt(b.kit_number || '0', 10);
+        return numA - numB;
+    });
+
+    if (selectedUser) {
+        return <AdminUserDetail user={selectedUser} onBack={() => setSelectedUser(null)} />;
+    }
 
     return (
         <div className="p-4 space-y-6">
@@ -335,7 +388,16 @@ const AdminPanel: React.FC = () => {
                                 <tbody className="divide-y divide-gray-100">
                                     {filteredUsers.map(u => (
                                         <tr key={u.id} className="hover:bg-gray-50">
-                                            <td className="px-4 py-3 font-medium text-gray-900">{u.name}</td>
+                                            <td className="px-4 py-3 font-medium text-gray-900 flex items-center gap-2">
+                                                {u.name}
+                                                <button
+                                                    onClick={() => setSelectedUser(u)}
+                                                    className="bg-blue-50 text-blue-600 p-1 rounded hover:bg-blue-100 transition-colors"
+                                                    title="Ver Detalles"
+                                                >
+                                                    <Eye size={14} />
+                                                </button>
+                                            </td>
                                             <td className="px-4 py-3 font-mono text-gray-600">{u.kitCode}</td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-2 py-1 rounded-full text-xs font-bold ${u.role === 'god' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' : 'bg-green-100 text-green-700'}`}>
@@ -430,8 +492,8 @@ const AdminPanel: React.FC = () => {
                             <table className="w-full text-sm text-left">
                                 <thead className="bg-gray-50 text-gray-500 font-medium">
                                     <tr>
-                                        <th className="px-4 py-3">Código</th>
                                         <th className="px-4 py-3">Etiqueta/Num</th>
+                                        <th className="px-4 py-3">Código</th>
                                         <th className="px-4 py-3">Variedad</th>
                                         <th className="px-4 py-3">Estado</th>
                                         <th className="px-4 py-3 text-right">Acciones</th>
@@ -447,16 +509,16 @@ const AdminPanel: React.FC = () => {
                                                         <input
                                                             type="text"
                                                             className="w-full border rounded px-2 py-1"
-                                                            value={editForm.code}
-                                                            onChange={e => setEditForm({ ...editForm, code: e.target.value })}
+                                                            value={editForm.kit_number || ''}
+                                                            onChange={e => setEditForm({ ...editForm, kit_number: e.target.value })}
                                                         />
                                                     </td>
                                                     <td className="px-4 py-3">
                                                         <input
                                                             type="text"
                                                             className="w-full border rounded px-2 py-1"
-                                                            value={editForm.kit_number || ''}
-                                                            onChange={e => setEditForm({ ...editForm, kit_number: e.target.value })}
+                                                            value={editForm.code}
+                                                            onChange={e => setEditForm({ ...editForm, code: e.target.value })}
                                                         />
                                                     </td>
                                                     <td className="px-4 py-3">
@@ -497,8 +559,8 @@ const AdminPanel: React.FC = () => {
                                             ) : (
                                                 // View Mode
                                                 <>
-                                                    <td className="px-4 py-3 font-mono text-gray-600">{kit.code}</td>
                                                     <td className="px-4 py-3">{kit.kit_number || '-'}</td>
+                                                    <td className="px-4 py-3 font-mono text-gray-600 font-bold">{kit.code}</td>
                                                     <td className="px-4 py-3">{kit.variety || '-'}</td>
                                                     <td className="px-4 py-3">
                                                         <span className={`px-2 py-1 rounded-full text-xs font-bold ${kit.status === 'claimed' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
