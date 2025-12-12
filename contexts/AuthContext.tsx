@@ -131,7 +131,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
 
                 console.log("DEBUG: Fetched Profile Data:", data);
-                const fullProfile: UserProfile = {
+
+                let mergedProfile: UserProfile = {
                     id: data.id,
                     name: data.name || '',
                     email: data.email || '',
@@ -141,8 +142,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     score: data.score || 0,
                     password: ''
                 };
-                console.log("DEBUG: Set User:", fullProfile);
-                setUser(fullProfile);
+
+                // Fallback: If DB profile lacks kitCode but we have it locally (e.g. OAuth return)
+                if (!mergedProfile.kitCode) {
+                    const pendingReg = localStorage.getItem('pending_registration');
+                    if (pendingReg) {
+                        try {
+                            console.log("Found pending registration for existing profile. Merging Kit Code...");
+                            const pendingProfile = JSON.parse(pendingReg);
+                            if (pendingProfile.kitCode) {
+                                // Update local object
+                                mergedProfile.kitCode = pendingProfile.kitCode;
+                                mergedProfile.startDate = mergedProfile.startDate || pendingProfile.startDate;
+                                mergedProfile.name = mergedProfile.name || pendingProfile.name;
+
+                                // Trigger background sync to DB
+                                // We don't await this to avoid blocking the UI, but we should probably ensure it happens.
+                                api.createProfile(mergedProfile).then(() => {
+                                    return api.claimKit(mergedProfile.kitCode, userId);
+                                }).then(() => {
+                                    console.log("Synced missing kit code to DB from pending state.");
+                                    localStorage.removeItem('pending_registration');
+                                }).catch(err => console.error("Background sync failed:", err));
+                            }
+                        } catch (e) {
+                            console.error("Error parsing pending registration:", e);
+                        }
+                    }
+                }
+
+                console.log("DEBUG: Set User:", mergedProfile);
+                setUser(mergedProfile);
             } else {
                 // Profile not found. Check if it's a new Google registration (if Trigger didn't run or was deleted)
                 const pendingReg = localStorage.getItem('pending_registration');

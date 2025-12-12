@@ -210,32 +210,33 @@ export default function App() {
       );
     }
 
-    // Check if we have a session but no profile loaded yet? Or maybe AuthContext returns null user if profile is missing kit?
-    // Actually, create_user.js created a profile with kitCode='GOD-MODE-ENABLED', so user SHOULD be loaded.
-    // If not, it means AuthContext failed to fetch it or map it.
+    // Authenticated but no profile found in DB (and no local pending state consumed yet)
+    // This happens if Supabase created the Auth User but the specific 'profiles' row is missing 
+    // AND the AuthContext logic didn't create it (e.g. race condition or error).
 
-    // However, if we enter here, we are essentially unauthenticated from the app's perspective.
-    // But if we are admins, we might have a partial profile or need to handle it.
+    // We can auto-recover if we have session info.
+    const recoverProfile = () => {
+      // Try to construct a temp profile from session
+      const tempUser: UserProfile = {
+        id: session.user.id,
+        email: session.user.email || '',
+        name: session.user.user_metadata?.full_name || 'Usuario',
+        role: 'user',
+        kitCode: '', // Missing!
+        startDate: new Date().toISOString(),
+        score: 0,
+        password: ''
+      };
+      // Show CompleteRegistration to force them to enter kit again
+      return (
+        <CompleteRegistration
+          user={tempUser}
+          onComplete={handleRegistrationCompleted}
+        />
+      );
+    };
 
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-xl font-bold mb-2">Cuenta no configurada</h2>
-        <p className="mb-4 text-gray-600">No encontramos un perfil asociado a esta cuenta.</p>
-        <p className="mb-6 text-sm text-gray-500">Es posible que hayas iniciado sesión con Google sin tener un Kit registrado.</p>
-
-        <div className="flex flex-col gap-4 items-center">
-          <button
-            onClick={() => {
-              handleLogout();
-              setAuthStage('landing');
-            }}
-            className="bg-primary text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-green-700"
-          >
-            Ir a Registrar Kit
-          </button>
-        </div>
-      </div>
-    );
+    return recoverProfile();
   }
 
 
