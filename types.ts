@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'admin' | 'god';
+export type UserRole = 'user' | 'god';
 
 export type AuthStage = 'landing' | 'login' | 'register' | 'verify' | 'authenticated' | 'admin_login' | 'admin_authenticated';
 
@@ -48,9 +48,9 @@ export type ViewState = 'dashboard' | 'form' | 'assistant' | 'resources' | 'admi
 
 export enum PlantStatus {
   GERMINATING = 'Germinación',
-  LEAVES = 'Primeras Hojas',
-  GROWING = 'Crecimiento Vegetativo',
-  WILTING = 'Marchitez / Estrés',
+  LEAVES = 'Aparición de primeras hojas',
+  GROWING = 'Crecimiento normal',
+  WILTING = 'Marchitez',
   FLOWERING = 'Floración',
   FRUITING = 'Fructificación',
   DEAD = 'Planta Muerta',

@@ -51,31 +51,7 @@ export const api = {
         if (error) throw error;
     },
 
-    async promoteToAdmin(userId: string): Promise<boolean> {
-        const { error } = await supabase
-            .from('profiles')
-            .update({ role: 'admin' })
-            .eq('id', userId);
 
-        if (error) {
-            console.error("Error promoting user", error);
-            return false;
-        }
-        return true;
-    },
-
-    async revokeAdmin(userId: string): Promise<boolean> {
-        const { error } = await supabase
-            .from('profiles')
-            .update({ role: 'user' })
-            .eq('id', userId);
-
-        if (error) {
-            console.error("Error revoking admin", error);
-            return false;
-        }
-        return true;
-    },
 
     // --- Entries ---
 

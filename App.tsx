@@ -26,6 +26,11 @@ export default function App() {
   const [authStage, setAuthStage] = useState<AuthStage>('landing');
   const [tempProfile, setTempProfile] = useState<Partial<UserProfile> | null>(null);
 
+  const handleRegistrationCompleted = (newProfile: UserProfile) => {
+    // Force reload to ensure AuthContext picks up the new kit code from DB
+    window.location.reload();
+  };
+
   useEffect(() => {
     // Check for auth errors in URL (e.g. from Google redirect)
     const params = new URLSearchParams(window.location.search);
@@ -55,7 +60,7 @@ export default function App() {
 
     if (user) {
       setAuthStage('authenticated');
-      if (user.role === 'admin' || user.role === 'god') {
+      if (user.role === 'god') {
         setCurrentView('admin');
       } else {
         loadEntries(user.id);
@@ -83,11 +88,7 @@ export default function App() {
 
   // Step 1: Landing -> Kit Config
   const handleKitConfig = (partialProfile: Partial<UserProfile>) => {
-    // Admin Check Bypass
-    if (partialProfile.role === 'admin') {
-      handleLoginSuccess(partialProfile as UserProfile);
-      return;
-    }
+
     setTempProfile(partialProfile);
     setAuthStage('register');
   };
@@ -108,7 +109,7 @@ export default function App() {
 
   const handleLoginSuccess = (profile: UserProfile) => {
     // State update handled by AuthContext mostly, but we set view here
-    if (profile.role === 'admin' || profile.role === 'god') {
+    if (profile.role === 'god') {
       setCurrentView('admin');
     } else {
       loadEntries(profile.id);
@@ -185,6 +186,29 @@ export default function App() {
   if (!user) {
     if (loading) return <div className="min-h-screen flex items-center justify-center text-primary">Cargando...</div>;
 
+    // New: If specific error state or just missing profile but authenticated
+    if (session) {
+      // User is authenticated (e.g. Google Login) but has no profile row in DB yet.
+      // We treat them as a "User" role for the purpose of completion.
+      const placeholderUser: UserProfile = {
+        id: session.user.id,
+        email: session.user.email || '',
+        name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
+        role: 'user', // Default
+        kitCode: '',
+        startDate: new Date().toISOString(),
+        score: 0,
+        password: ''
+      };
+
+      return (
+        <CompleteRegistration
+          user={placeholderUser}
+          onComplete={handleRegistrationCompleted}
+        />
+      );
+    }
+
     // Check if we have a session but no profile loaded yet? Or maybe AuthContext returns null user if profile is missing kit?
     // Actually, create_user.js created a profile with kitCode='GOD-MODE-ENABLED', so user SHOULD be loaded.
     // If not, it means AuthContext failed to fetch it or map it.
@@ -214,10 +238,6 @@ export default function App() {
   }
 
 
-  const handleRegistrationCompleted = (newProfile: UserProfile) => {
-    // Force reload to ensure AuthContext picks up the new kit code from DB
-    window.location.reload();
-  };
 
   // --- Strict Kit Enforcement ---
   if (user.role === 'user' && !user.kitCode) {
@@ -240,7 +260,7 @@ export default function App() {
       case 'resources':
         return <Resources />;
       case 'admin':
-        return (user.role === 'admin' || user.role === 'god') ? <AdminPanel /> : <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
+        return (user.role === 'god') ? <AdminPanel /> : <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
       default:
         return <Dashboard user={user} entries={entries} onViewChange={setCurrentView} />;
     }
@@ -256,7 +276,7 @@ export default function App() {
         </div>
       </main>
 
-      {user.role !== 'admin' && (
+      {user.role !== 'god' && (
         <BottomNav currentView={currentView} onChange={setCurrentView} />
       )}
     </div>

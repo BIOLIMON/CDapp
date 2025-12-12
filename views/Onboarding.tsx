@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, GlobalStats } from '../types';
 
 import { api } from '../services/api';
-import { Sprout, QrCode, X, Droplets, FlaskConical, Users, ArrowRight, Leaf, Trophy, Camera, Shield, LogIn } from 'lucide-react';
+import { Sprout, QrCode, X, Droplets, FlaskConical, Users, ArrowRight, Leaf, Trophy, Camera, LogIn, ChevronRight } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 
 interface OnboardingProps {
@@ -17,8 +18,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
     const [isScanning, setIsScanning] = useState(false);
     const [stats, setStats] = useState<GlobalStats | null>(null);
     const [leaderboard, setLeaderboard] = useState<{ name: string, score: number }[]>([]);
-    const [showAdminInput, setShowAdminInput] = useState(false);
-    const [adminPassword, setAdminPassword] = useState('');
 
     const scannerRef = useRef<Html5Qrcode | null>(null);
     const formRef = useRef<HTMLDivElement>(null);
@@ -45,13 +44,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
         if (name && kitCode && startDate) {
             // Validate Kit Code with API
             try {
-                // If admin code, bypass
-                if (kitCode === 'ADMIN-ACCESS') {
-                    // Logic for admin login is handled in a different form, but if someone types it here...
-                    // Let's just allow it for now or keep it strict. 
-                    // Ideally admin login is separate.
-                }
-
                 const { available } = await api.checkKitAvailability(kitCode);
 
                 if (!available) {
@@ -69,22 +61,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
                 console.error("Error validando kit", error);
                 alert("Error de conexión al validar el kit.");
             }
-        }
-    };
-
-    const handleAdminLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (adminPassword === 'ADMIN123') {
-            onSave({
-                id: 'admin',
-                name: 'Administrador',
-                kitCode: 'ADMIN-ACCESS',
-                startDate: new Date().toISOString(),
-                role: 'admin',
-                score: 0
-            });
-        } else {
-            alert("Contraseña incorrecta");
         }
     };
 
@@ -254,7 +230,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
                             {leaderboard.map((user, idx) => (
                                 <div key={idx} className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
                                     <div className="flex items-center gap-3">
-                                        <span className={`font-bold w-6 text-center ${idx === 0 ? 'text-yellow-500 text-xl' : 'text-gray-400'}`}>
+                                        <span className={`font - bold w - 6 text - center ${idx === 0 ? 'text-yellow-500 text-xl' : 'text-gray-400'} `}>
                                             {idx + 1}
                                         </span>
                                         <span className="font-medium text-gray-700">{user.name}</span>
@@ -272,115 +248,74 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
 
             {/* --- LOGIN / FORM SECTION --- */}
             <div ref={formRef} className="bg-gray-50 py-16 px-6">
+                <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative">
+                    <div className="text-center mb-8">
+                        <div className="inline-block p-3 bg-green-100 rounded-full text-primary mb-3">
+                            <Sprout size={32} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-800">Configura tu Kit</h2>
+                        <p className="text-gray-500 text-sm">Paso 1 de 3: Identificación del Kit</p>
+                    </div>
 
-                {!showAdminInput ? (
-                    <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative">
-                        <div className="text-center mb-8">
-                            <div className="inline-block p-3 bg-green-100 rounded-full text-primary mb-3">
-                                <Sprout size={32} />
-                            </div>
-                            <h2 className="text-2xl font-bold text-gray-800">Configura tu Kit</h2>
-                            <p className="text-gray-500 text-sm">Paso 1 de 3: Identificación del Kit</p>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre del Participante</label>
+                            <input
+                                type="text"
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                                placeholder="Ej. Juan Pérez"
+                            />
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre del Participante</label>
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Código Único del Kit</label>
+                            <div className="flex gap-2">
                                 <input
                                     type="text"
                                     required
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                                    placeholder="Ej. Juan Pérez"
+                                    value={kitCode}
+                                    onChange={(e) => setKitCode(e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition uppercase"
+                                    placeholder="CD-XXXX-XX"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setIsScanning(true)}
+                                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 rounded-lg border border-gray-300 transition flex items-center justify-center"
+                                    title="Escanear QR"
+                                >
+                                    <QrCode size={24} />
+                                </button>
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Código Único del Kit</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        required
-                                        value={kitCode}
-                                        onChange={(e) => setKitCode(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition uppercase"
-                                        placeholder="CD-XXXX-XX"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsScanning(true)}
-                                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 rounded-lg border border-gray-300 transition flex items-center justify-center"
-                                        title="Escanear QR"
-                                    >
-                                        <QrCode size={24} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha de Inicio (Siembra)</label>
-                                <input
-                                    type="date"
-                                    required
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                                />
-                                <p className="text-xs text-gray-500 mt-1">Selecciona el día que plantaste tus semillas.</p>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-green-700 transition-colors shadow-lg mt-2 flex justify-center items-center gap-2"
-                            >
-                                Siguiente Paso <ChevronRight size={18} />
-                            </button>
-                        </form>
-
-                        <div className="mt-6 border-t pt-4 text-center">
-                            <button
-                                onClick={() => setShowAdminInput(true)}
-                                className="text-xs text-gray-400 hover:text-gray-600 flex items-center justify-center gap-1 mx-auto"
-                            >
-                                <Shield size={12} /> Acceso Administrador
-                            </button>
                         </div>
-                    </div>
-                ) : (
-                    <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border border-red-100 border-t-4 border-t-red-500">
-                        <div className="text-center mb-6">
-                            <h2 className="text-xl font-bold text-gray-800">Panel de Control</h2>
-                            <p className="text-gray-500 text-sm">Acceso restringido a coordinadores.</p>
-                        </div>
-                        <form onSubmit={handleAdminLogin} className="space-y-4">
+
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha de Inicio (Siembra)</label>
                             <input
-                                type="password"
-                                placeholder="Contraseña de Administrador"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
-                                value={adminPassword}
-                                onChange={(e) => setAdminPassword(e.target.value)}
+                                type="date"
+                                required
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
                             />
-                            <button
-                                type="submit"
-                                className="w-full bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-black transition-colors"
-                            >
-                                Acceder
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setShowAdminInput(false)}
-                                className="w-full text-gray-500 text-sm py-2"
-                            >
-                                Cancelar
-                            </button>
-                        </form>
-                    </div>
-                )}
+                            <p className="text-xs text-gray-500 mt-1">Selecciona el día que plantaste tus semillas.</p>
+                        </div>
 
-                <p className="mt-8 text-xs text-gray-400 text-center">
-                    Proyecto desarrollado por PhytoLearning.<br />Apoyado por ANID e Iniciativa Científica Milenio.
-                </p>
+                        <button
+                            type="submit"
+                            className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-green-700 transition-colors shadow-lg mt-2 flex justify-center items-center gap-2"
+                        >
+                            Siguiente Paso <ChevronRight size={18} />
+                        </button>
+                    </form>
+
+                    <p className="mt-8 text-xs text-gray-400 text-center">
+                        Proyecto desarrollado por PhytoLearning.<br />Apoyado por ANID e Iniciativa Científica Milenio.
+                    </p>
+                </div>
             </div>
 
             {/* --- QR MODAL --- */}
@@ -404,8 +339,5 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
         </div>
     );
 };
-
-// Quick helper icon component since I added it in the JSX but not imported in previous versions of the file
-const ChevronRight = ({ size }: { size: number }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>;
 
 export default Onboarding;

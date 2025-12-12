@@ -90,6 +90,36 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validation Logic
+        const errors: string[] = [];
+        const potIds: PotId[] = ['1', '2', '3', '4'];
+
+        potIds.forEach(id => {
+            const pot = pots[id];
+            const label = POT_DEFINITIONS.find(p => p.id === id)?.label || `Maceta ${id}`;
+
+            // Check mandatory fields
+            if (pot.weight === '' || pot.weight === null || isNaN(Number(pot.weight))) {
+                errors.push(`${label}: Peso es obligatorio.`);
+            }
+            if (pot.height === '' || pot.height === null || isNaN(Number(pot.height))) {
+                errors.push(`${label}: Altura es obligatoria.`);
+            }
+            if (!pot.images.front) {
+                errors.push(`${label}: Foto de Frente es obligatoria.`);
+            }
+            // Visual status is always set due to default, but ensures it's valid
+            if (!pot.visualStatus) {
+                errors.push(`${label}: Estado Visual es obligatorio.`);
+            }
+        });
+
+        if (errors.length > 0) {
+            alert("Por favor completa los campos obligatorios:\n\n" + errors.join('\n'));
+            return;
+        }
+
         const entry: ExperimentEntry = {
             id: Date.now().toString(),
             userId: user.id,
@@ -196,18 +226,19 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
                                         type="number"
                                         placeholder="0.0"
                                         step="0.1"
-                                        required={['2', '4'].includes(activeTab) && dayNumber >= 21} // Required for drought pots in exp phase
+                                        required
                                         value={pots[activeTab].weight}
                                         onChange={(e) => handlePotChange(activeTab, 'weight', e.target.value)}
                                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 mb-1">Altura (cm)</label>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">Altura (cm) <span className="text-red-500">*</span></label>
                                     <input
                                         type="number"
                                         placeholder="0.0"
                                         step="0.1"
+                                        required
                                         value={pots[activeTab].height}
                                         onChange={(e) => handlePotChange(activeTab, 'height', e.target.value)}
                                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
@@ -216,7 +247,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold text-gray-600 mb-1">Estado Visual</label>
+                                <label className="block text-xs font-semibold text-gray-600 mb-1">Estado Visual <span className="text-red-500">*</span></label>
                                 <select
                                     value={pots[activeTab].visualStatus}
                                     onChange={(e) => handlePotChange(activeTab, 'visualStatus', e.target.value)}
@@ -232,7 +263,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel }) => {
                             <div className="bg-white bg-opacity-50 p-3 rounded-lg border border-gray-200">
                                 <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                     <Camera size={14} />
-                                    Evidencia Fotográfica
+                                    Evidencia Fotográfica <span className="text-red-500 text-[10px]">(Frente obligatorio)</span>
                                 </label>
                                 <div className="grid grid-cols-3 gap-3">
                                     {renderPhotoSlot(activeTab, 'front', 'Frente')}

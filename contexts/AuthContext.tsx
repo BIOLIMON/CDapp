@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                                 email: data.email || pendingProfile.email,
                                 kitCode: pendingProfile.kitCode, // This is what we are missing
                                 startDate: data.start_date || pendingProfile.startDate,
-                                role: data.role as 'user' | 'admin' | 'god',
+                                role: data.role as 'user' | 'god',
                                 score: data.score || 0,
                                 password: ''
                             };
@@ -137,7 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     email: data.email || '',
                     kitCode: data.kit_code || '',
                     startDate: data.start_date || '',
-                    role: data.role as 'user' | 'admin' | 'god',
+                    role: data.role as 'user' | 'god',
                     score: data.score || 0,
                     password: ''
                 };
