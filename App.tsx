@@ -241,7 +241,7 @@ export default function App() {
 
 
   // --- Strict Kit Enforcement ---
-  if (user.role === 'user' && !user.kitCode) {
+  if (user.role !== 'god' && !user.kitCode) {
     return (
       <CompleteRegistration
         user={user}
