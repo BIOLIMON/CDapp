@@ -45,7 +45,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
             // Validate Kit Code with API
             const normalizedCode = kitCode.trim().toUpperCase();
             try {
-                const { available } = await api.checkKitAvailability(normalizedCode);
+                const { available, error } = await api.checkKitAvailability(normalizedCode);
+
+                if (error) {
+                    console.error("API Error checking kit:", error);
+                    alert(`Error verificando kit: ${JSON.stringify(error.message || error)}`);
+                    return;
+                }
 
                 if (!available) {
                     alert("El código del kit no es válido o ya ha sido utilizado.");
@@ -59,8 +65,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
                     role: 'user',
                 });
             } catch (error) {
-                console.error("Error validando kit", error);
-                alert("Error de conexión al validar el kit.");
+                console.error("Unexpected error validando kit", error);
+                alert(`Error inesperado: ${JSON.stringify(error)}`);
             }
         }
     };
@@ -316,6 +322,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
                     <p className="mt-8 text-xs text-gray-400 text-center">
                         Proyecto desarrollado por PhytoLearning.<br />Apoyado por ANID e Iniciativa Científica Milenio.
                     </p>
+                    <p className="text-[10px] text-gray-300 text-center mt-2">v1.1-debug</p>
                 </div>
             </div>
 

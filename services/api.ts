@@ -332,7 +332,8 @@ export const api = {
 
     // --- Kit Management ---
 
-    async checkKitAvailability(code: string): Promise<{ available: boolean, kit?: any }> {
+    async checkKitAvailability(code: string): Promise<{ available: boolean, kit?: any, error?: any }> {
+        console.log("Checking availability for:", code);
         const { data, error } = await supabase
             .from('allowed_kits')
             .select('*')
@@ -340,8 +341,13 @@ export const api = {
             .single();
 
         if (error) {
-            // If code not found (code is unique)
-            return { available: false };
+            console.error("Supabase Error checkKitAvailability:", error);
+            // If code not found (code is unique), error.code is PGRST116
+            if (error.code === 'PGRST116') {
+                return { available: false, error: 'NOT_FOUND' };
+            }
+            // Other errors (RLS, Connection)
+            return { available: false, error: error };
         }
 
         return {
