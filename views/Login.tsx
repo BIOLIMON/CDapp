@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { LogIn, ArrowLeft, Sprout } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { api } from '../services/api';
 import { UserProfile } from '../types';
 
 interface LoginProps {
@@ -10,23 +9,15 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin, onBack }) => {
+    const { signInWithEmail, signInWithGoogle } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
     const [loading, setLoading] = useState(false);
 
-
     const handleGoogleLogin = async () => {
-        try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin
-                }
-            });
-            if (error) throw error;
-        } catch (error: any) {
+        const { error } = await signInWithGoogle();
+        if (error) {
             setError(error.message || 'Error al conectar con Google');
         }
     };
@@ -37,59 +28,11 @@ const Login: React.FC<LoginProps> = ({ onLogin, onBack }) => {
         setLoading(true);
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-
+            const { error } = await signInWithEmail(email, password);
             if (error) throw error;
-
-            // The AuthContext in App/Parent should detect the session change
-            // But we can also manually fetch profile to pass to onLogin if needed for legacy compatibility during refactor
-            // For now, let's just allow the Auth listener in AuthContext to pick it up.
-            // But App.tsx expects onLogin(user). 
-            // We can fetch the profile here.
-
-            if (data.user) {
-
-                let profile = await api.getProfile(data.user.id);
-
-                // Self-Healing mechanism for broken accounts (missing profile)
-                if (!profile) {
-                    console.log("Profile missing, attempting to repair...");
-                    const meta = data.user.user_metadata || {};
-                    const newProfile: UserProfile = {
-                        id: data.user.id,
-                        email: data.user.email || '',
-                        name: meta.name || 'Usuario',
-                        kitCode: meta.kitCode || 'PENDING',
-                        startDate: meta.startDate || new Date().toISOString(),
-                        role: 'user',
-                        score: 0,
-                        gender: meta.gender,
-                        birthDate: meta.birthDate,
-                        password: ''
-                    };
-
-                    try {
-                        await api.createProfile(newProfile);
-                        profile = newProfile;
-                        console.log("Profile repaired successfully.");
-                    } catch (repairError) {
-                        console.error("Failed to repair profile", repairError);
-                    }
-                }
-
-                if (profile) {
-                    onLogin(profile);
-                } else {
-                    setError('Error: No se encontró el perfil de usuario y no se pudo crear.');
-                    await supabase.auth.signOut();
-                }
-            }
+            // Success is handled by AuthContext updating the user, which App.tsx listens to
         } catch (err: any) {
             setError(err.message || 'Error al iniciar sesión');
-        } finally {
             setLoading(false);
         }
     };
@@ -164,9 +107,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, onBack }) => {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                disabled={loading}
+                                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
-                                Iniciar Sesión
+                                {loading ? 'Cargando...' : 'Iniciar Sesión'}
                             </button>
                         </div>
                     </form>

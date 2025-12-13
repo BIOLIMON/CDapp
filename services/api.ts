@@ -351,7 +351,7 @@ export const api = {
     },
 
     async claimKit(code: string, userId: string): Promise<boolean> {
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('allowed_kits')
             .update({
                 status: 'claimed',
@@ -359,12 +359,20 @@ export const api = {
                 claimed_at: new Date().toISOString()
             })
             .eq('code', code)
-            .eq('status', 'available'); // Double check purely at DB level
+            .eq('status', 'available')
+            .select(); // Return updated rows
 
         if (error) {
             console.error("Error claiming kit", error);
             return false;
         }
+
+        // Check if any row was actually updated
+        if (!data || data.length === 0) {
+            console.warn("Claim failed: Kit not available or check conditions failed.");
+            return false;
+        }
+
         return true;
     },
 

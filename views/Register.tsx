@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import { Camera, User, Mail, Lock, ChevronRight, ArrowLeft, Check } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 interface RegisterProps {
@@ -11,6 +11,7 @@ interface RegisterProps {
 }
 
 const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) => {
+    const { signUp, signInWithGoogle } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,6 +19,7 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
     const [birthDate, setBirthDate] = useState('');
     const [avatar, setAvatar] = useState<string | undefined>(undefined);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -34,8 +36,6 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
-
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,32 +65,24 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
 
         try {
             // 1. Sign Up con Metadata para el Trigger
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        name: tempProfile.name,
-                        kitCode: tempProfile.kitCode,
-                        gender: gender,
-                        birthDate: birthDate,
-                        startDate: new Date().toISOString()
-                    }
-                }
+            const { data: authData, error: authError } = await signUp(email, password, {
+                name: tempProfile.name,
+                kitCode: tempProfile.kitCode,
+                gender: gender,
+                birthDate: birthDate,
+                startDate: new Date().toISOString()
             });
 
             if (authError) throw authError;
 
             // Si el registro es exitoso, el Trigger en Supabase creará el perfil.
-            // Solo notificamos al componente padre.
 
-            if (authData.user) {
+            if (authData?.user) {
                 // 1. Claim the Kit explicitely (Trigger usually only handles Profile creation)
                 if (tempProfile.kitCode) {
                     const claimed = await api.claimKit(tempProfile.kitCode, authData.user.id);
                     if (!claimed) {
                         console.error("Warning: Kit could not be automatically claimed. Retrying later or manual intervention needed.");
-                        // We don't block the flow, but it's an issue.
                     }
                 }
 
@@ -108,7 +100,6 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                     role: 'user'
                 };
 
-                // No llamamos a api.createProfile manualmente para evitar error RLS (confiamos en el Trigger para Profile)
                 onComplete(fullProfile);
             }
         } catch (err: any) {
@@ -153,10 +144,7 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                             type="button"
                             onClick={() => {
                                 localStorage.setItem('pending_registration', JSON.stringify(tempProfile));
-                                supabase.auth.signInWithOAuth({
-                                    provider: 'google',
-                                    options: { redirectTo: window.location.origin }
-                                });
+                                signInWithGoogle();
                             }}
                             className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-all mb-4"
                         >
@@ -264,9 +252,10 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
 
                     <button
                         type="submit"
-                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition"
+                        disabled={loading}
+                        className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
-                        Continuar <ChevronRight className="ml-2 h-5 w-5" />
+                        {loading ? 'Registrando...' : 'Continuar'} <ChevronRight className="ml-2 h-5 w-5" />
                     </button>
                 </form>
             </div>

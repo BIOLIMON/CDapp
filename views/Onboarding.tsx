@@ -43,8 +43,9 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
         e.preventDefault();
         if (name && kitCode && startDate) {
             // Validate Kit Code with API
+            const normalizedCode = kitCode.trim().toUpperCase();
             try {
-                const { available } = await api.checkKitAvailability(kitCode);
+                const { available } = await api.checkKitAvailability(normalizedCode);
 
                 if (!available) {
                     alert("El código del kit no es válido o ya ha sido utilizado.");
@@ -53,7 +54,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
 
                 onSave({
                     name,
-                    kitCode: kitCode.toUpperCase(),
+                    kitCode: normalizedCode,
                     startDate,
                     role: 'user',
                 });

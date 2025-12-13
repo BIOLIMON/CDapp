@@ -24,8 +24,9 @@ const CompleteRegistration: React.FC<CompleteRegistrationProps> = ({ user, onCom
 
         setLoading(true);
         try {
+            const normalizedCode = kitCode.trim().toUpperCase();
             // 1. Validate Kit
-            const { available } = await api.checkKitAvailability(kitCode.toUpperCase());
+            const { available } = await api.checkKitAvailability(normalizedCode);
             if (!available) {
                 alert("El código del kit no es válido o ya ha sido utilizado.");
                 setLoading(false);
@@ -33,12 +34,17 @@ const CompleteRegistration: React.FC<CompleteRegistrationProps> = ({ user, onCom
             }
 
             // 2. Claim Kit
-            await api.claimKit(kitCode.toUpperCase(), user.id);
+            const claimed = await api.claimKit(normalizedCode, user.id);
+            if (!claimed) {
+                alert("Error: El kit no pudo ser asignado (posiblemente ya fue tomado).");
+                setLoading(false);
+                return;
+            }
 
             // 3. Update Profile
             const updatedProfile: UserProfile = {
                 ...user,
-                kitCode: kitCode.toUpperCase(),
+                kitCode: normalizedCode,
                 startDate: startDate
             };
 

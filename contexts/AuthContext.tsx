@@ -8,14 +8,22 @@ interface AuthContextType {
     user: UserProfile | null;
     session: Session | null;
     loading: boolean;
+    signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
+    signInWithGoogle: () => Promise<{ error: Error | null }>;
+    signUp: (email: string, password: string, metadata: any) => Promise<{ data: any; error: Error | null }>;
     signOut: () => Promise<void>;
+    refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
     session: null,
     loading: true,
+    signInWithEmail: async () => ({ error: null }),
+    signInWithGoogle: async () => ({ error: null }),
+    signUp: async () => ({ data: null, error: null }),
     signOut: async () => { },
+    refreshProfile: async () => { },
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -25,51 +33,146 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const [initializing, setInitializing] = useState(true);
+
+    // Core Profile Fetcher
+    const fetchProfile = async (userId: string, userEmail?: string): Promise<UserProfile | null> => {
+        try {
+            // 1. Try to get existing profile
+            let { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
+                console.error("Error fetching profile:", error);
+            }
+
+            // 2. Handle Pending Registration (Local Storage)
+            // This is for the flow: Landing -> Kit Code -> Google Sign In -> Profile Creation
+            const pendingReg = localStorage.getItem('pending_registration');
+            let pendingProfile = pendingReg ? JSON.parse(pendingReg) : null;
+
+            if (data) {
+                // Profile exists. Use it.
+                // Check if we need to backfill Kit Code from pending flow?
+                if (!data.kit_code && pendingProfile && pendingProfile.kitCode) {
+                    console.log("Merging pending Kit Code into existing profile...");
+                    const normalizedCode = pendingProfile.kitCode.trim().toUpperCase();
+                    api.claimKit(normalizedCode, userId).catch(console.error); // Claim async
+
+                    // Update local object immediately for UI responsiveness
+                    data.kit_code = normalizedCode;
+
+                    localStorage.removeItem('pending_registration');
+                }
+
+                const profile: UserProfile = {
+                    id: data.id,
+                    name: data.name || 'Usuario',
+                    email: data.email || userEmail || '',
+                    kitCode: data.kit_code || '',
+                    startDate: data.start_date || new Date().toISOString(),
+                    role: data.role as 'user' | 'god',
+                    score: data.score || 0,
+                    avatar: data.avatar_url // if exists
+                };
+                return profile;
+            } else if (pendingProfile) {
+                // 3. Profile does NOT exist, but we have Pending Data (e.g. fresh Google Sign Up)
+                console.log("Creating new profile from pending registration...");
+                const normalizedCode = pendingProfile.kitCode ? pendingProfile.kitCode.trim().toUpperCase() : '';
+                const newProfile: UserProfile = {
+                    id: userId,
+                    email: userEmail || '',
+                    ...pendingProfile,
+                    kitCode: normalizedCode, // Ensure mapped correctly
+                    startDate: new Date().toISOString(),
+                    role: 'user',
+                    score: 0
+                };
+
+                // Construct the object for DB
+                // We delegate to API or Trigger. 
+                // If Trigger failed or didn't run (e.g. race condition), we do it properly here.
+
+                // For robustness, we try to create it via API (Upsert)
+                try {
+                    await api.createProfile(newProfile);
+                    if (newProfile.kitCode) {
+                        await api.claimKit(newProfile.kitCode, userId);
+                    }
+                    localStorage.removeItem('pending_registration');
+                    return newProfile;
+                } catch (createErr) {
+                    console.error("Error creating profile:", createErr);
+                    // Fallback: return the temp profile so UI works, but it might fail later?
+                    return newProfile;
+                }
+            } else {
+                // 4. No Profile, No Pending Data.
+                // This is a "Zombie" user (Authenticated but no profile).
+                // Return null, let the UI handle "Complete Registration".
+                return null;
+            }
+
+        } catch (err) {
+            console.error("Critical error in fetchProfile:", err);
+            return null;
+        }
+    };
+
+    const refreshProfile = async () => {
+        if (!session?.user) return;
+        const profile = await fetchProfile(session.user.id, session.user.email);
+        setUser(profile);
+    };
+
+    // Initial Load & Subscription
     useEffect(() => {
         let mounted = true;
 
-        // Safety timeout to prevent infinite loading
-        const safetyTimer = setTimeout(() => {
-            if (mounted) {
-                setLoading(currentLoading => {
-                    if (currentLoading) {
-                        console.warn("Auth check timed out (8s), forcing completion.");
-                        return false;
+        const initialize = async () => {
+            try {
+                // Get initial session
+                const { data: { session: initialSession } } = await supabase.auth.getSession();
+
+                if (mounted) {
+                    setSession(initialSession);
+                    if (initialSession?.user) {
+                        const profile = await fetchProfile(initialSession.user.id, initialSession.user.email);
+                        setUser(profile);
                     }
-                    return currentLoading;
-                });
+                }
+            } catch (error) {
+                console.error("Initialization error:", error);
+            } finally {
+                if (mounted) {
+                    setLoading(false);
+                    setInitializing(false);
+                }
             }
-        }, 8000);
+        };
 
-        // Check active session
-        supabase.auth.getSession().then(({ data: { session }, error }) => {
+        initialize();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
             if (!mounted) return;
+            console.log("Auth State Change:", event);
 
-            if (error) {
-                console.error("Error checking session:", error);
+            // Update session immediately
+            setSession(newSession);
+
+            if (newSession?.user) {
+                // If we switched users or just signed in, fetch profile
+                // Optimization: if event is TOKEN_REFRESHED, maybe skip?
+                if (event === 'TOKEN_REFRESHED' && user) return;
+
+                setLoading(true); // Briefly show loading on swich
+                const profile = await fetchProfile(newSession.user.id, newSession.user.email);
+                setUser(profile);
                 setLoading(false);
-                return;
-            }
-
-            setSession(session);
-            if (session?.user) {
-                fetchProfile(session.user.id, session.user.email);
-            } else {
-                setLoading(false);
-            }
-        }).catch(err => {
-            console.error("Unexpected auth error:", err);
-            if (mounted) setLoading(false);
-        });
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            if (!mounted) return;
-            setSession(session);
-
-            if (session?.user) {
-                // If we already have the user loaded and it matches, don't refetch to avoid loops?
-                // But profile might change. 
-                await fetchProfile(session.user.id, session.user.email);
             } else {
                 setUser(null);
                 setLoading(false);
@@ -78,155 +181,68 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         return () => {
             mounted = false;
-            clearTimeout(safetyTimer);
             subscription.unsubscribe();
         };
     }, []);
 
-    const fetchProfile = async (userId: string, email?: string) => {
-        try {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', userId)
-                .single();
 
-            if (data) {
-                // Check if profile is incomplete (e.g. created by trigger without kitCode for Google Auth)
-                if (!data.kit_code) {
-                    const pendingReg = localStorage.getItem('pending_registration');
-                    if (pendingReg) {
-                        try {
-                            console.log("Found incomplete profile and pending registration. Merging...");
-                            const pendingProfile = JSON.parse(pendingReg);
+    // --- Actions ---
 
-                            // Merge DB profile with Pending Data
-                            const mergedProfile: UserProfile = {
-                                id: data.id,
-                                name: data.name || pendingProfile.name, // Prefer DB name if exists, else pending
-                                email: data.email || pendingProfile.email,
-                                kitCode: pendingProfile.kitCode, // This is what we are missing
-                                startDate: data.start_date || pendingProfile.startDate,
-                                role: data.role as 'user' | 'god',
-                                score: data.score || 0,
-                                password: ''
-                            };
+    const signInWithEmail = async (email: string, password: string) => {
+        setLoading(true);
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        // State update handled by onAuthStateChange
+        if (error) setLoading(false);
+        return { error };
+    };
 
-                            // 1. Update Profile
-                            await api.createProfile(mergedProfile); // This is an upsert
-
-                            // 2. Claim Kit
-                            if (mergedProfile.kitCode) {
-                                await api.claimKit(mergedProfile.kitCode, userId);
-                            }
-
-                            // 3. Update Local State
-                            setUser(mergedProfile);
-                            localStorage.removeItem('pending_registration');
-                            return; // Done
-                        } catch (mergeError) {
-                            console.error("Error merging profile", mergeError);
-                        }
-                    }
-                }
-
-                console.log("DEBUG: Fetched Profile Data:", data);
-
-                let mergedProfile: UserProfile = {
-                    id: data.id,
-                    name: data.name || '',
-                    email: data.email || '',
-                    kitCode: data.kit_code || '',
-                    startDate: data.start_date || '',
-                    role: data.role as 'user' | 'god',
-                    score: data.score || 0,
-                    password: ''
-                };
-
-                // Fallback: If DB profile lacks kitCode but we have it locally (e.g. OAuth return)
-                if (!mergedProfile.kitCode) {
-                    const pendingReg = localStorage.getItem('pending_registration');
-                    if (pendingReg) {
-                        try {
-                            console.log("Found pending registration for existing profile. Merging Kit Code...");
-                            const pendingProfile = JSON.parse(pendingReg);
-                            if (pendingProfile.kitCode) {
-                                // Update local object
-                                mergedProfile.kitCode = pendingProfile.kitCode;
-                                mergedProfile.startDate = mergedProfile.startDate || pendingProfile.startDate;
-                                mergedProfile.name = mergedProfile.name || pendingProfile.name;
-
-                                // Trigger background sync to DB
-                                // We don't await this to avoid blocking the UI, but we should probably ensure it happens.
-                                api.createProfile(mergedProfile).then(() => {
-                                    return api.claimKit(mergedProfile.kitCode, userId);
-                                }).then(() => {
-                                    console.log("Synced missing kit code to DB from pending state.");
-                                    localStorage.removeItem('pending_registration');
-                                }).catch(err => console.error("Background sync failed:", err));
-                            }
-                        } catch (e) {
-                            console.error("Error parsing pending registration:", e);
-                        }
-                    }
-                }
-
-                console.log("DEBUG: Set User:", mergedProfile);
-                setUser(mergedProfile);
-            } else {
-                // Profile not found. Check if it's a new Google registration (if Trigger didn't run or was deleted)
-                const pendingReg = localStorage.getItem('pending_registration');
-                if (pendingReg) {
-                    try {
-                        console.log("Found pending registration, creating profile...");
-                        const pendingProfile = JSON.parse(pendingReg);
-
-                        const newProfile: UserProfile = {
-                            ...pendingProfile,
-                            id: userId,
-                            email: email || '',
-                            score: 0,
-                            role: 'user'
-                        };
-
-                        // 1. Create Profile
-                        await api.createProfile(newProfile);
-
-                        // 2. Claim Kit
-                        if (newProfile.kitCode) {
-                            await api.claimKit(newProfile.kitCode, userId);
-                        }
-
-                        // 3. Set User
-                        setUser(newProfile);
-
-                        // 4. Clear Pending
-                        localStorage.removeItem('pending_registration');
-                        console.log("Profile created successfully via Google Sign-In");
-                    } catch (createError) {
-                        console.error("Error creating profile from pending registration", createError);
-                    }
-                } else {
-                    console.warn('User authenticated but no profile found and no pending registration.');
-                    // If no profile and no pending reg, we might want to sign them out or redirect to onboarding
-                    // For now, leave user as null so App acts accordingly
-                }
+    const signInWithGoogle = async () => {
+        // Redirects away, so no need to setLoading(false) really, but good practice
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin
             }
-        } catch (error) {
-            console.error('Unexpected error fetching profile', error);
-        } finally {
-            setLoading(false);
-        }
+        });
+        if (error) setLoading(false);
+        return { error };
+    };
+
+    const signUp = async (email: string, password: string, metadata: any) => {
+        setLoading(true);
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: { data: metadata }
+        });
+
+        // If auto-confirm is off, user isn't logged in yet.
+        // If auto-confirm is on, onAuthStateChange will fire.
+        if (error) setLoading(false);
+        return { data, error };
     };
 
     const signOut = async () => {
+        setLoading(true);
         await supabase.auth.signOut();
+        // State update handled by onAuthStateChange
         setUser(null);
         setSession(null);
+        setLoading(false);
     };
 
     return (
-        <AuthContext.Provider value={{ user, session, loading, signOut }}>
+        <AuthContext.Provider value={{
+            user,
+            session,
+            loading,
+            signInWithEmail,
+            signInWithGoogle,
+            signUp,
+            signOut,
+            refreshProfile
+        }}>
             {children}
         </AuthContext.Provider>
     );

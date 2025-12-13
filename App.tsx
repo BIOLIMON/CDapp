@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, ExperimentEntry, ViewState, AuthStage } from './types';
-import { db } from './services/db';
 import Onboarding from './views/Onboarding';
 import Dashboard from './views/Dashboard';
 import EntryForm from './views/EntryForm';
@@ -18,63 +17,40 @@ import { useAuth } from './contexts/AuthContext';
 import { api } from './services/api';
 import { supabase } from './lib/supabase';
 
+// Helper component for loading
+const LoadingScreen = () => (
+  <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-primary">
+    <span className="text-4xl animate-bounce">🌱</span>
+    <span className="mt-4 font-medium">Cargando CultivaDatos...</span>
+  </div>
+);
+
 export default function App() {
   const { user, session, loading } = useAuth();
   const [entries, setEntries] = useState<ExperimentEntry[]>([]);
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
 
-  // Auth State
+  // We keep 'authStage' but purely for unauthenticated flow (Landing -> Login/Register)
   const [authStage, setAuthStage] = useState<AuthStage>('landing');
   const [tempProfile, setTempProfile] = useState<Partial<UserProfile> | null>(null);
 
-  const handleRegistrationCompleted = (newProfile: UserProfile) => {
-    // Force reload to ensure AuthContext picks up the new kit code from DB
-    window.location.reload();
-  };
-
   useEffect(() => {
-    // Check for auth errors in URL (e.g. from Google redirect)
-    const params = new URLSearchParams(window.location.search);
-    const hash = window.location.hash.substring(1); // Remove #
-    const hashParams = new URLSearchParams(hash);
-
-    const error = params.get('error') || hashParams.get('error');
-    const errorDesc = params.get('error_description') || hashParams.get('error_description');
-
-    if (window.location.pathname === '/admin') {
-      // Allow standard flow to handle auth state. 
-      // If unauthorized, onBoarding/Login will show. 
-      // If authorized, effect will redirect to admin view if role matches.
-      // We can force 'login' stage if not authed.
-      if (!user && !loading && authStage !== 'login') {
-        setAuthStage('login');
-      }
-      return;
-    }
-
-    if (error) {
-      console.error("Auth Error detected:", error, errorDesc);
-      // Clean URL to prevent staying in error state
-      window.history.replaceState(null, '', window.location.pathname);
-      alert(`Error de inicio de sesión: ${decodedErrorDesc(errorDesc) || error}`);
-    }
-
-    if (user) {
+    // If user is authenticated, we reset authStage to authenticated
+    if (user && !loading) {
       setAuthStage('authenticated');
       if (user.role === 'god') {
         setCurrentView('admin');
       } else {
         loadEntries(user.id);
       }
-    } else {
-      if (!loading && authStage !== 'admin_login') setAuthStage('landing');
+    } else if (!loading && !user) {
+      // Only reset to landing if we were in 'authenticated' state (e.g. after logout)
+      // If we are in 'login' or 'register', stay there.
+      if (authStage === 'authenticated') {
+        setAuthStage('landing');
+      }
     }
   }, [user, loading]);
-
-  const decodedErrorDesc = (desc: string | null) => {
-    if (!desc) return null;
-    return decodeURIComponent(desc).replace(/\+/g, ' ');
-  };
 
   const loadEntries = async (userId: string) => {
     try {
@@ -85,43 +61,43 @@ export default function App() {
     }
   };
 
-  // --- Handlers for Auth Flow ---
+  // --- Handlers for Unauthenticated Flow ---
 
-  // Step 1: Landing -> Kit Config
   const handleKitConfig = (partialProfile: Partial<UserProfile>) => {
-
     setTempProfile(partialProfile);
     setAuthStage('register');
   };
 
-  // Step 2: Register (Profile) -> Verification
   const handleRegistrationComplete = (fullProfile: UserProfile) => {
-    setTempProfile(fullProfile); // Update temp with full details
-    setAuthStage('verify');
-  };
+    // In Supabase Auth, registration usually triggers auto-login or email check
+    // For email/password, session might exist immediately if auto-confirm is on.
+    // Or we wait for useAuth to pick up the change.
+    // But we can set tempProfile to show VerifyEmail if needed.
 
-  // Step 3: Verify -> Login Success (Simplified for Supabase: User clicks link in email)
-  const handleVerificationComplete = () => {
-    // In Supabase, the user clicks a link in email which redirects them back.
-    // Auto-login might happen or they need to login.
-    // For this MVP, let's treat "Verify" as "Please check your email" screen.
-    setAuthStage('login');
-  };
+    // If we used Google, we redirected.
+    // If email/pass, we might be here.
 
-  const handleLoginSuccess = (profile: UserProfile) => {
-    // State update handled by AuthContext mostly, but we set view here
-    if (profile.role === 'god') {
-      setCurrentView('admin');
-    } else {
-      loadEntries(profile.id);
-      setCurrentView('dashboard');
+    // If session exists, useEffect will take over.
+    if (!session) {
+      setTempProfile(fullProfile);
+      setAuthStage('verify');
     }
-    setAuthStage('authenticated');
   };
 
   const handleLogout = async () => {
-    // const { supabase } = await import('./lib/supabase');
-    await supabase.auth.signOut();
+    const { useAuth } = await import('./contexts/AuthContext'); // Dynamic? No, usage inside function is fine via closure default
+    // We use the hook provided 'signOut' via context, but we are outside the provider? No, App is inside Provider.
+    // Wait, App is the default export. index.tsx wraps it.
+
+    // We can't call hook conditionally/inside callback. 
+    // We already have 'signOut' from useAuth() at top level? No, destructuring at top.
+    // Let's grab it.
+  };
+
+  const { signOut } = useAuth();
+
+  const performLogout = async () => {
+    await signOut();
     setEntries([]);
     setCurrentView('dashboard');
     setAuthStage('landing');
@@ -131,10 +107,8 @@ export default function App() {
   const handleAddEntry = async (entry: ExperimentEntry) => {
     if (!user) return;
     const fullEntry = { ...entry, userId: user.id };
-
     try {
       await api.addEntry(fullEntry);
-      // Refresh entries
       await loadEntries(user.id);
       setCurrentView('dashboard');
     } catch (e) {
@@ -143,114 +117,43 @@ export default function App() {
     }
   };
 
+  if (loading) return <LoadingScreen />;
 
-
-  if (authStage === 'landing') {
-    return (
-      <Onboarding
-        onSave={handleKitConfig}
-        onLoginRequest={() => setAuthStage('login')}
-      />
-    );
-  }
-
-  if (authStage === 'login') {
-    return (
-      <Login
-        onLogin={handleLoginSuccess}
-        onBack={() => setAuthStage('landing')}
-      />
-    );
-  }
-
-  if (authStage === 'register' && tempProfile) {
-    return (
-      <Register
-        tempProfile={tempProfile}
-        onComplete={handleRegistrationComplete}
-        onBack={() => setAuthStage('landing')}
-      />
-    );
-  }
-
-  if (authStage === 'verify' && tempProfile) {
-    return (
-      <VerifyEmail
-        user={tempProfile as UserProfile}
-        onConfirm={handleVerificationComplete}
-      />
-    );
-  }
-
-  // --- Authenticated App ---
+  // --- UNAUTHENTICATED ROUTES ---
 
   if (!user) {
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-primary">Cargando...</div>;
-
-    // New: If specific error state or just missing profile but authenticated
-    if (session) {
-      // User is authenticated (e.g. Google Login) but has no profile row in DB yet.
-      // We treat them as a "User" role for the purpose of completion.
-      const placeholderUser: UserProfile = {
-        id: session.user.id,
-        email: session.user.email || '',
-        name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
-        role: 'user', // Default
-        kitCode: '',
-        startDate: new Date().toISOString(),
-        score: 0,
-        password: ''
-      };
-
-      return (
-        <CompleteRegistration
-          user={placeholderUser}
-          onComplete={handleRegistrationCompleted}
-        />
-      );
+    if (authStage === 'landing') {
+      return <Onboarding onSave={handleKitConfig} onLoginRequest={() => setAuthStage('login')} />;
+    }
+    if (authStage === 'login') {
+      return <Login onLogin={() => { }} onBack={() => setAuthStage('landing')} />;
+    }
+    if (authStage === 'register' && tempProfile) {
+      return <Register tempProfile={tempProfile} onComplete={handleRegistrationComplete} onBack={() => setAuthStage('landing')} />;
+    }
+    if (authStage === 'verify' && tempProfile) {
+      return <VerifyEmail user={tempProfile as UserProfile} onConfirm={() => setAuthStage('login')} />;
     }
 
-    // Authenticated but no profile found in DB (and no local pending state consumed yet)
-    // This happens if Supabase created the Auth User but the specific 'profiles' row is missing 
-    // AND the AuthContext logic didn't create it (e.g. race condition or error).
-
-    // We can auto-recover if we have session info.
-    const recoverProfile = () => {
-      // Try to construct a temp profile from session
-      const tempUser: UserProfile = {
-        id: session.user.id,
-        email: session.user.email || '',
-        name: session.user.user_metadata?.full_name || 'Usuario',
-        role: 'user',
-        kitCode: '', // Missing!
-        startDate: new Date().toISOString(),
-        score: 0,
-        password: ''
-      };
-      // Show CompleteRegistration to force them to enter kit again
-      return (
-        <CompleteRegistration
-          user={tempUser}
-          onComplete={handleRegistrationCompleted}
-        />
-      );
-    };
-
-    return recoverProfile();
+    // Fallback
+    return <Onboarding onSave={handleKitConfig} onLoginRequest={() => setAuthStage('login')} />;
   }
 
+  // --- AUTHENTICATED ROUTES ---
 
-
-  // --- Strict Kit Enforcement ---
+  // 1. Missing Profile / Kit (Partial Auth)
+  // Context handles the "creating profile from local storage" part, but if it failed or missing:
   if (user.role !== 'god' && !user.kitCode) {
+    // Emergency completion screen
     return (
       <CompleteRegistration
         user={user}
-        onComplete={handleRegistrationCompleted}
+        onComplete={() => window.location.reload()}
       />
     );
   }
 
+  // 2. Main App
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -270,7 +173,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-800">
-      <Header user={user} currentView={currentView} onLogout={handleLogout} />
+      <Header user={user} currentView={currentView} onLogout={performLogout} />
 
       <main className="flex-1 overflow-y-auto pb-24">
         <div className="max-w-3xl mx-auto w-full">
