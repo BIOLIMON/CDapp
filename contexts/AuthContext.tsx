@@ -60,12 +60,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 if (!data.kit_code && pendingProfile && pendingProfile.kitCode) {
                     console.log("Merging pending Kit Code into existing profile...");
                     const normalizedCode = pendingProfile.kitCode.trim().toUpperCase();
-                    api.claimKit(normalizedCode, userId).catch(console.error); // Claim async
+                    // Claim immediately
+                    api.claimKit(normalizedCode, userId).catch(console.error);
 
-                    // Update local object immediately for UI responsiveness
+                    // Update local object immediately
                     data.kit_code = normalizedCode;
-
                     localStorage.removeItem('pending_registration');
+                } else if (data.kit_code) {
+                    // Profile HAS kit code (from Trigger metadata), but it might not be claimed in 'allowed_kits' yet
+                    // because we deferred it until now (post-login).
+                    // We optimistically try to claim it.
+                    // If already claimed by THIS user, it's fine (idempotent-ish check needed or just ignore false)
+                    // If claimed by ANOTHER user, user is in trouble (but trigger shouldn't have allowed duplicate kit usage ideally, 
+                    // though we removed uniqueness there? No, allowed_kits is unique. Profile kit_code isn't.)
+                    // Actually, if someone else stole the kit in between, this user has a kit code they can't use.
+                    // UI should handle "Kit Error". But for now, we try to claim.
+
+                    // We run this async so we don't block profile loading
+                    api.claimKit(data.kit_code, userId).then(success => {
+                        if (success) console.log("Kit successfully claimed (Deferred).");
+                        else console.log("Kit claim verification checked (Already claimed or unavailable).");
+                    }).catch(err => console.error("Error ensuring kit claim:", err));
                 }
 
                 const profile: UserProfile = {
@@ -217,9 +232,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             options: { data: metadata }
         });
 
-        // If auto-confirm is off, user isn't logged in yet.
-        // If auto-confirm is on, onAuthStateChange will fire.
-        if (error) setLoading(false);
+        // Always reset loading. 
+        // If session was created, onAuthStateChange will trigger and might set it to true again briefly, which is fine.
+        // If no session (email confirm), we MUST reset it so UI can show the "Verify Email" screen.
+        setLoading(false);
+
         return { data, error };
     };
 

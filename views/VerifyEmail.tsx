@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, CheckCircle, ArrowRight } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 import { UserProfile } from '../types';
 
 interface VerifyEmailProps {
@@ -15,26 +15,26 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ user, onConfirm }) => {
                     <Mail size={40} />
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Revisa tu correo!</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Todo listo!</h2>
                 <p className="text-gray-500 mb-6">
-                    Hemos enviado un enlace de confirmación a <span className="font-semibold text-gray-800">{user.email}</span>.
+                    Tu cuenta ha sido creada. Hemos enviado un enlace de confirmación a <span className="font-semibold text-gray-800">{user.email}</span>.
                 </p>
 
                 <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-8 text-sm text-blue-800 text-left">
-                    <p className="font-bold mb-1">Importante:</p>
-                    <p>Revisa tu bandeja de entrada (y spam). Debes hacer clic en el enlace que te enviamos para activar tu cuenta.</p>
-                </div>
-
-                <div className="text-xs text-gray-500 mb-4">
-                    Una vez confirmado, la aplicación te redirigirá automáticamente o puedes iniciar sesión.
+                    <p className="font-bold mb-1">Pasos Siguientes:</p>
+                    <ol className="list-decimal ml-4 space-y-1">
+                        <li>Ve a tu correo y haz clic en "Confirmar".</li>
+                        <li>Vuelve aquí e inicia sesión.</li>
+                        <li>¡Tu kit se vinculará automáticamente!</li>
+                    </ol>
                 </div>
 
                 <button
                     onClick={onConfirm}
-                    className="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-50 transition flex items-center justify-center gap-2"
+                    className="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-sm"
                 >
-                    <CheckCircle size={20} />
-                    Ya confirmé mi correo
+                    <ArrowRight size={20} />
+                    Ir al Inicio de Sesión
                 </button>
 
                 <p className="mt-6 text-sm text-gray-400">

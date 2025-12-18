@@ -90,7 +90,7 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                     ...tempProfile as UserProfile,
                     id: authData.user.id,
                     email,
-                    password: '',
+                    password: password, // Pass password for auto-login polling
                     gender,
                     birthDate,
                     kitCode: tempProfile.kitCode || '',
