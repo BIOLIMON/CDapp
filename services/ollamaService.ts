@@ -1,13 +1,6 @@
 import { MANUAL_CONTEXT } from "../constants";
 
-const getApiUrl = () => {
-    const url = import.meta.env.VITE_OLLAMA_API_URL;
-    if (!url || url === 'https://tu-url-ngrok.ngrok-free.app') {
-        return null;
-    }
-    // Remove trailing slash if present
-    return url.replace(/\/$/, '');
-};
+
 
 export interface ChatMessage {
     role: 'system' | 'user' | 'assistant';
@@ -15,11 +8,8 @@ export interface ChatMessage {
 }
 
 export const sendMessageToOllama = async (userMessage: string, history: ChatMessage[] = []) => {
-    const baseUrl = getApiUrl();
-
-    if (!baseUrl) {
-        return "⚠️ Error: URL de Ollama no configurada. Configura VITE_OLLAMA_API_URL en .env.local con tu URL de Ngrok.";
-    }
+    // We now use the local proxy to avoid CORS issues
+    const baseUrl = '/api/ollama';
 
     try {
         // Construct messages array with system prompt first
@@ -29,21 +19,21 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
             { role: 'user', content: userMessage }
         ];
 
-        const response = await fetch(`${baseUrl}/api/chat`, {
+        const response = await fetch(baseUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'true',
             },
             body: JSON.stringify({
-                model: 'mistral:7b',
+                model: 'mistral:7b', // This can be overriden by the proxy if needed, but sending it for clarity
                 messages: messages,
                 stream: false
             }),
         });
 
         if (!response.ok) {
-            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`Server returned ${response.status}: ${errorData.error || response.statusText}`);
         }
 
         const data = await response.json();
@@ -51,6 +41,6 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
 
     } catch (error) {
         console.error("Error calling Ollama:", error);
-        return "Lo siento, hubo un error al conectar con el asistente remoto. Verifica que el servidor (Ngrok) esté activo.";
+        return "Lo siento, hubo un error al conectar con el asistente remoto. Verifica que el servidor (Ngrok) esté activo y la configuración sea correcta.";
     }
 };
