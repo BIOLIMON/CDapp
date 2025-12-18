@@ -11,7 +11,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onChange }) => {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Inicio' },
     { id: 'form', icon: PlusCircle, label: 'Registrar' },
-
+    { id: 'assistant', icon: MessageSquareText, label: 'Asistente' },
     { id: 'resources', icon: BookOpen, label: 'Guía' },
   ];
 
