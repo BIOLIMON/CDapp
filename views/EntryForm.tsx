@@ -73,9 +73,9 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel, initialEn
             return;
         }
 
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        const maxSize = 100 * 1024 * 1024; // 100MB
         if (file.size > maxSize) {
-            alert("La imagen es demasiado pesada. El máximo permitido es 5MB.");
+            alert("La imagen es demasiado pesada. El máximo permitido es 100MB.");
             return;
         }
 
