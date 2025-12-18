@@ -11,7 +11,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onChange }) => {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Inicio' },
     { id: 'form', icon: PlusCircle, label: 'Registrar' },
-    { id: 'assistant', icon: MessageSquareText, label: 'Asistente' },
+
     { id: 'resources', icon: BookOpen, label: 'Guía' },
   ];
 
@@ -25,9 +25,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, onChange }) => {
             <button
               key={item.id}
               onClick={() => onChange(item.id as ViewState)}
-              className={`flex flex-col items-center justify-center w-full py-3 px-1 transition-colors ${
-                isActive ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
-              }`}
+              className={`flex flex-col items-center justify-center w-full py-3 px-1 transition-colors ${isActive ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
+                }`}
             >
               <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
               <span className="text-[10px] mt-1 font-medium">{item.label}</span>
