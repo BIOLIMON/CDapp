@@ -118,7 +118,7 @@ const CompleteRegistration: React.FC<CompleteRegistrationProps> = ({ user, onCom
                                 value={kitCode}
                                 onChange={(e) => setKitCode(e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition uppercase"
-                                placeholder="CD-XXXX-XX"
+                                placeholder="CVPL-XXX"
                             />
                             <button
                                 type="button"
