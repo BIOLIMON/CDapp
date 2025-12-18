@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.32.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@supabase/supabase-js": "^2.87.1",
     "class-variance-authority": "^0.7.1",

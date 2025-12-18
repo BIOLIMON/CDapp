@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
-import { sendMessageToGemini } from '../services/geminiService';
+import { sendMessageToOllama, ChatMessage } from '../services/ollamaService';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -33,8 +33,12 @@ const Assistant: React.FC = () => {
     setInput('');
     setIsLoading(true);
 
-    const responseText = await sendMessageToGemini(input);
-    
+    const history = messages.map(m => ({
+      role: m.role as 'user' | 'assistant',
+      content: m.text
+    }));
+    const responseText = await sendMessageToOllama(input, history);
+
     const botMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', text: responseText || "No pude generar una respuesta." };
     setMessages(prev => [...prev, botMsg]);
     setIsLoading(false);
@@ -57,17 +61,17 @@ const Assistant: React.FC = () => {
                 {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
               </div>
               <div className={`p-3 rounded-2xl text-sm shadow-sm ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'}`}>
-                 <ReactMarkdown>{msg.text}</ReactMarkdown>
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-             <div className="flex gap-2 bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none shadow-sm items-center">
-                <Loader2 size={16} className="animate-spin text-primary" />
-                <span className="text-xs text-gray-500">Pensando...</span>
-             </div>
+            <div className="flex gap-2 bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none shadow-sm items-center">
+              <Loader2 size={16} className="animate-spin text-primary" />
+              <span className="text-xs text-gray-500">Pensando...</span>
+            </div>
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -75,21 +79,21 @@ const Assistant: React.FC = () => {
 
       <div className="p-3 bg-white border-t border-gray-200">
         <div className="relative flex items-center">
-            <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Escribe tu pregunta..."
-                className="w-full pl-4 pr-12 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-primary border rounded-full outline-none text-sm transition-all"
-            />
-            <button 
-                onClick={handleSend}
-                disabled={isLoading || !input.trim()}
-                className={`absolute right-2 p-2 rounded-full ${isLoading || !input.trim() ? 'text-gray-400' : 'bg-primary text-white hover:bg-green-700'}`}
-            >
-                <Send size={18} />
-            </button>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Escribe tu pregunta..."
+            className="w-full pl-4 pr-12 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-primary border rounded-full outline-none text-sm transition-all"
+          />
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !input.trim()}
+            className={`absolute right-2 p-2 rounded-full ${isLoading || !input.trim() ? 'text-gray-400' : 'bg-primary text-white hover:bg-green-700'}`}
+          >
+            <Send size={18} />
+          </button>
         </div>
       </div>
     </div>
