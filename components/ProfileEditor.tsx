@@ -18,6 +18,20 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onClose, onUpdate }
         if (!e.target.files || e.target.files.length === 0) return;
 
         const file = e.target.files[0];
+
+        // Validation
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+        if (!validTypes.includes(file.type)) {
+            alert("Formato no válido. Solo se permiten JPG, PNG y WebP.");
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            alert("La imagen es demasiado pesada. El máximo permitido es 5MB.");
+            return;
+        }
+
         setUploading(true);
         try {
             const fileExt = file.name.split('.').pop();

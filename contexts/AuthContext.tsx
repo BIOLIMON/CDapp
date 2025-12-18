@@ -60,12 +60,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 if (!data.kit_code && pendingProfile && pendingProfile.kitCode) {
                     console.log("Merging pending Kit Code into existing profile...");
                     const normalizedCode = pendingProfile.kitCode.trim().toUpperCase();
-                    // Claim immediately
-                    api.claimKit(normalizedCode, userId).catch(console.error);
 
-                    // Update local object immediately
-                    data.kit_code = normalizedCode;
-                    localStorage.removeItem('pending_registration');
+                    // 1. Claim Kit
+                    // We await this to ensure we don't update profile if claim fails (unless it's already ours)
+                    const claimed = await api.claimKit(normalizedCode, userId);
+
+                    // If claim failed, check if it was because WE already own it (idempotency)
+                    // But api.claimKit returns boolean. We'd need to check ownership if false.
+                    // For now, if claim fails, we might still want to link it if we are the owner?
+                    // Let's trust the flow: if claim fails, maybe don't update profile to avoid bad state?
+                    // But if the user stuck in the reported loop, they ARE the owner. 
+
+                    // Robust fix: Update profile anyway if we have a code.
+                    // If the code is invalid, the UI will just show it. 
+                    // But better: Check if we are the claimer?
+
+                    let shouldUpdateProfile = claimed;
+                    if (!claimed) {
+                        const { data: kit } = await supabase.from('allowed_kits').select('claimed_by').eq('code', normalizedCode).single();
+                        if (kit && kit.claimed_by === userId) {
+                            shouldUpdateProfile = true;
+                        }
+                    }
+
+                    if (shouldUpdateProfile) {
+                        await supabase.from('profiles').update({ kit_code: normalizedCode }).eq('id', userId);
+                        data.kit_code = normalizedCode;
+                        localStorage.removeItem('pending_registration');
+                    }
                 } else if (data.kit_code) {
                     // Profile HAS kit code (from Trigger metadata), but it might not be claimed in 'allowed_kits' yet
                     // because we deferred it until now (post-login).

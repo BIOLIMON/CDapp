@@ -66,6 +66,19 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel, initialEn
     const handleImageUpload = async (id: PotId, type: keyof PotImages, file: File | null) => {
         if (!file) return;
 
+        // Validation
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+        if (!validTypes.includes(file.type)) {
+            alert("Formato no válido. Solo se permiten JPG, PNG y WebP.");
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            alert("La imagen es demasiado pesada. El máximo permitido es 5MB.");
+            return;
+        }
+
         try {
             const timestamp = Date.now();
             const path = `${user.id}/${timestamp}_${id}_${type}.${file.name.split('.').pop()}`;
