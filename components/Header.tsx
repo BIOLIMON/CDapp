@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserProfile, ViewState } from '../types';
 import { Sprout, LogOut, Trophy, ShieldCheck, User } from 'lucide-react';
+import ProfileEditor from './ProfileEditor';
 
 interface HeaderProps {
   user: UserProfile | null;
@@ -9,6 +10,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ user, currentView, onLogout }) => {
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+
   const getTitle = () => {
     switch (currentView) {
       case 'dashboard': return 'Mi Huerto Digital';
@@ -24,15 +27,20 @@ const Header: React.FC<HeaderProps> = ({ user, currentView, onLogout }) => {
     <header className="bg-primary text-white shadow-md sticky top-0 z-50">
       <div className="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="bg-white p-1 rounded-full text-primary overflow-hidden w-8 h-8 flex items-center justify-center">
+          <button
+            onClick={() => user && setIsEditingProfile(true)}
+            className="bg-white p-1 rounded-full text-primary overflow-hidden w-8 h-8 flex items-center justify-center hover:ring-2 hover:ring-green-400 focus:outline-none transition"
+            title="Editar Perfil"
+            disabled={!user}
+          >
             {user?.role === 'god' ? (
               <ShieldCheck size={20} />
             ) : user?.avatar ? (
               <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <Sprout size={20} />
+              <User size={20} />
             )}
-          </div>
+          </button>
           <h1 className="font-bold text-lg tracking-tight">{getTitle()}</h1>
         </div>
         {user && (
@@ -45,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ user, currentView, onLogout }) => {
             )}
 
             <div className="text-xs text-green-100 text-right hidden sm:block">
-              <p className="font-medium">{user.name}</p>
+              <p className="font-medium truncate max-w-[100px]">{user.name}</p>
               <p className="opacity-80 font-mono">{user.kitCode}</p>
             </div>
             <button
@@ -58,6 +66,14 @@ const Header: React.FC<HeaderProps> = ({ user, currentView, onLogout }) => {
           </div>
         )}
       </div>
+
+      {isEditingProfile && user && (
+        <ProfileEditor
+          user={user}
+          onClose={() => setIsEditingProfile(false)}
+          onUpdate={() => window.location.reload()} // Simple reload to refresh context
+        />
+      )}
     </header>
   );
 };

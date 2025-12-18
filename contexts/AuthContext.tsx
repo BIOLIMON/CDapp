@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     startDate: data.start_date || new Date().toISOString(),
                     role: data.role as 'user' | 'god',
                     score: data.score || 0,
-                    avatar: data.avatar_url // if exists
+                    avatar: data.avatar // if exists
                 };
                 return profile;
             } else if (pendingProfile) {

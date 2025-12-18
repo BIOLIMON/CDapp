@@ -45,16 +45,25 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
             // Validate Kit Code with API
             const normalizedCode = kitCode.trim().toUpperCase();
             try {
+                if (normalizedCode.length < 6 || !normalizedCode.startsWith('CVPL-')) {
+                    alert("El código debe tener el formato CVPL-XXX (ej. CVPL-001)");
+                    return;
+                }
+
                 const { available, error } = await api.checkKitAvailability(normalizedCode);
 
                 if (error) {
                     console.error("API Error checking kit:", error);
-                    alert(`Error verificando kit: ${JSON.stringify(error.message || error)}`);
+                    if (error === 'NOT_FOUND' || error.message?.includes('PGRST116')) { // Catch 406/Not Found
+                        alert("Código de kit no encontrado. Verifique que esté escrito correctamente (ej. CVPL-001).");
+                    } else {
+                        alert(`Error verificando kit: ${JSON.stringify(error.message || error)}`);
+                    }
                     return;
                 }
 
                 if (!available) {
-                    alert("El código del kit no es válido o ya ha sido utilizado.");
+                    alert("El código del kit ya ha sido utilizado o no está disponible.");
                     return;
                 }
 

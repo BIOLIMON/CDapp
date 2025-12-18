@@ -124,19 +124,13 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                     <div className="text-center mb-6">
                         <div className="relative inline-block">
                             <div className="w-24 h-24 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
-                                {avatar ? (
-                                    <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
-                                ) : (
-                                    <User size={40} className="text-gray-400" />
-                                )}
+                                <User size={40} className="text-gray-400" />
                             </div>
-                            <label className="absolute bottom-0 right-0 bg-accent p-2 rounded-full cursor-pointer shadow-md hover:bg-yellow-400 transition">
-                                <Camera size={16} className="text-gray-800" />
-                                <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
-                            </label>
+                            {/* Avatar upload deferred to post-login */}
                         </div>
                         <h3 className="mt-2 font-medium text-gray-900">{tempProfile.name}</h3>
-                        <p className="text-sm text-gray-500">{tempProfile.kitCode}</p>
+                        <p className="text-xs text-gray-400 mt-1">(Podrás subir tu foto de perfil más tarde)</p>
+                        <p className="text-sm text-gray-500 mt-2">{tempProfile.kitCode}</p>
                     </div>
 
                     <div className="space-y-4">
@@ -178,7 +172,7 @@ const Register: React.FC<RegisterProps> = ({ tempProfile, onComplete, onBack }) 
                                     className="focus:ring-primary focus:border-primary block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border"
                                     placeholder="correo@ejemplo.com"
                                     value={email}
-                                    onChange={e => setEmail(e.target.value)}
+                                    onChange={e => setEmail(e.target.value.trim())}
                                 />
                             </div>
                         </div>
