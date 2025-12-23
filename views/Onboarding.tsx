@@ -140,10 +140,15 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
 
                 <div className="max-w-4xl mx-auto px-6 py-20 relative z-10">
                     <nav className="flex justify-between items-center mb-12">
-                        <div className="inline-flex items-center gap-2 bg-green-800/50 backdrop-blur-sm px-4 py-1 rounded-full text-green-200 text-sm font-medium border border-green-700">
+                        <a
+                            href="https://phytolearning.cl/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-green-800/50 backdrop-blur-sm px-4 py-1 rounded-full text-green-200 text-sm font-medium border border-green-700 hover:bg-green-700/50 transition-colors cursor-pointer"
+                        >
                             <Leaf size={16} />
                             <span>PhytoLearning</span>
-                        </div>
+                        </a>
                         <button
                             onClick={onLoginRequest}
                             className="flex items-center gap-2 text-green-100 hover:text-white font-medium transition"
