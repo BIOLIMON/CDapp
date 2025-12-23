@@ -46,7 +46,7 @@ export default function App() {
     } else if (!loading && !user) {
       // Only reset to landing if we were in 'authenticated' state (e.g. after logout)
       // If we are in 'login' or 'register', stay there.
-      if (authStage === 'authenticated') {
+      if (authStage === 'authenticated' || authStage === 'landing') {
         setAuthStage('landing');
       }
     }

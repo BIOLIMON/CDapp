@@ -172,6 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const initialize = async () => {
             try {
+                setLoading(true);
                 // Get initial session
                 const { data: { session: initialSession } } = await supabase.auth.getSession();
 
@@ -179,7 +180,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     setSession(initialSession);
                     if (initialSession?.user) {
                         const profile = await fetchProfile(initialSession.user.id, initialSession.user.email);
-                        setUser(profile);
+                        if (mounted) setUser(profile);
                     }
                 }
             } catch (error) {
@@ -198,18 +199,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!mounted) return;
             console.log("Auth State Change:", event);
 
-            // Update session immediately
+            if (event === 'SIGNED_OUT') {
+                setSession(null);
+                setUser(null);
+                setLoading(false);
+                return;
+            }
+
+            // Update session
             setSession(newSession);
 
             if (newSession?.user) {
-                // If we switched users or just signed in, fetch profile
-                // Optimization: if event is TOKEN_REFRESHED, maybe skip?
+                // If it's just a token refresh and we already have a user, don't trigger loading
                 if (event === 'TOKEN_REFRESHED' && user) return;
 
-                setLoading(true); // Briefly show loading on swich
+                setLoading(true);
                 const profile = await fetchProfile(newSession.user.id, newSession.user.email);
-                setUser(profile);
-                setLoading(false);
+                if (mounted) {
+                    setUser(profile);
+                    setLoading(false);
+                }
             } else {
                 setUser(null);
                 setLoading(false);
