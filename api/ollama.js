@@ -20,6 +20,7 @@ export default async function handler(req, res) {
             headers: {
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true', // Critical for ngrok
+                'x-api-key': process.env.VITE_OLLAMA_API_KEY || 'cultivadatos-secret-key-123',
             },
             body: JSON.stringify(req.body),
         });

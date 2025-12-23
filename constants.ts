@@ -38,6 +38,11 @@ INFORMACIÓN DEL PROYECTO:
 
 - **Datos a registrar:** Peso, Altura, pH, Fotos.
 
+CONTACTO SOPORTE:
+Si el usuario requiere asistencia experta o tiene problemas complejos fuera de tu alcance, indícale que contacte a:
+**Genome Regulation Lab**
+WhatsApp: **+56 9 69653854**
+
 Si la pregunta es ambigua, asume que se refiere al contexto de este experimento.
 `;
 

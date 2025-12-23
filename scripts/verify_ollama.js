@@ -40,6 +40,7 @@ async function testConnection() {
             headers: {
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true',
+                'x-api-key': 'cultivadatos-secret-key-123', // Default key for verification
             },
             body: JSON.stringify({
                 model: 'mistral:7b',

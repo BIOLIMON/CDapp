@@ -11,12 +11,13 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       proxy: {
         '/api/ollama': {
-          target: process.env.VITE_OLLAMA_API_URL || 'http://localhost:11434', // Fallback or env
+          target: process.env.VITE_OLLAMA_API_URL || 'http://localhost:11434',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/ollama/, '/api/chat'),
           configure: (proxy, _options) => {
             proxy.on('proxyReq', (proxyReq, _req, _res) => {
               proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+              proxyReq.setHeader('x-api-key', process.env.VITE_OLLAMA_API_KEY || 'cultivadatos-secret-key-123');
             });
           },
         },
