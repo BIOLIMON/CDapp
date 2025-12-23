@@ -125,39 +125,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Initial Load & Subscription
     useEffect(() => {
         let mounted = true;
+        let loadingTimeout: NodeJS.Timeout;
+
+        // Safety Timeout: Force stop loading after 6 seconds if something hangs
+        const startSafetyTimeout = () => {
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            loadingTimeout = setTimeout(() => {
+                if (mounted) {
+                    console.warn("[Auth] Safety timeout reached. Forcing loading to false.");
+                    setLoading(false);
+                }
+            }, 6000);
+        };
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
             if (!mounted) return;
             console.log(`[Auth] Auth State Event: ${event}`);
+
+            // Start/Reset safety timeout whenever a significant auth event occurs
+            if (event !== 'TOKEN_REFRESHED') startSafetyTimeout();
 
             // Update refs immediately
             sessionRef.current = newSession;
             setSession(newSession);
 
             if (newSession?.user) {
-                // If it's a token refresh and we already have a user, don't re-fetch/re-load
+                // If it's a token refresh and we already have a user, just ensure loading is false
                 if (event === 'TOKEN_REFRESHED' && userRef.current) {
                     console.log("[Auth] Token refreshed, skipping profile fetch.");
+                    setLoading(false);
+                    if (loadingTimeout) clearTimeout(loadingTimeout);
                     return;
                 }
 
                 setLoading(true);
-                const profile = await fetchProfile(newSession.user.id, newSession.user.email);
-
-                if (mounted) {
-                    userRef.current = profile;
-                    setUser(profile);
-                    setLoading(false);
+                try {
+                    const profile = await fetchProfile(newSession.user.id, newSession.user.email);
+                    if (mounted) {
+                        userRef.current = profile;
+                        setUser(profile);
+                    }
+                } catch (err) {
+                    console.error("[Auth] Failed to load profile in event handler:", err);
+                } finally {
+                    if (mounted) {
+                        setLoading(false);
+                        if (loadingTimeout) clearTimeout(loadingTimeout);
+                    }
                 }
             } else {
                 userRef.current = null;
                 setUser(null);
                 setLoading(false);
+                if (loadingTimeout) clearTimeout(loadingTimeout);
             }
         });
 
         return () => {
             mounted = false;
+            if (loadingTimeout) clearTimeout(loadingTimeout);
             subscription.unsubscribe();
         };
     }, []);
