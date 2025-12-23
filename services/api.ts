@@ -219,52 +219,25 @@ export const api = {
     },
 
     async getGlobalStats(): Promise<GlobalStats> {
-        // 1. Total Users/Experiments
-        const { count: totalUsers } = await supabase
-            .from('profiles')
-            .select('*', { count: 'exact', head: true });
+        const { data, error } = await supabase.rpc('get_landing_stats');
 
-        // 2. Total Entries
-        const { count: totalEntries } = await supabase
-            .from('experiment_entries')
-            .select('*', { count: 'exact', head: true });
-
-        // 3. Total Photos
-        // Fetch only images column from pots to minimize data transfer
-        const { data: potsData } = await supabase
-            .from('pots')
-            .select('images');
-
-        let totalPhotos = 0;
-        if (potsData) {
-            potsData.forEach((p: any) => {
-                if (p.images) {
-                    // Count keys that correspond to valid photos
-                    const img = p.images;
-                    if (img.front) totalPhotos++;
-                    if (img.top) totalPhotos++;
-                    if (img.profile) totalPhotos++;
-                }
-            });
+        if (error) {
+            console.error("Error fetching global stats via RPC:", error);
+            return {
+                totalUsers: 0,
+                activeExperiments: 0,
+                totalEntries: 0,
+                totalPhotos: 0,
+                leaderboard: []
+            };
         }
 
-        // 4. Leaderboard
-        const { data: topUsers } = await supabase
-            .from('profiles')
-            .select('name, score')
-            .order('score', { ascending: false })
-            .limit(3);
-
-        const leaderboard = topUsers
-            ? topUsers.map((u: any) => ({ name: u.name, score: u.score }))
-            : [];
-
         return {
-            totalUsers: totalUsers || 0,
-            activeExperiments: totalUsers || 0,
-            totalEntries: totalEntries || 0,
-            totalPhotos,
-            leaderboard
+            totalUsers: data.totalUsers || 0,
+            activeExperiments: data.activeExperiments || 0,
+            totalEntries: data.totalEntries || 0,
+            totalPhotos: data.totalPhotos || 0,
+            leaderboard: data.leaderboard || []
         };
     },
     async getAllUsers(): Promise<UserProfile[]> {

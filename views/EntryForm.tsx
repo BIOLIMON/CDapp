@@ -134,9 +134,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel, initialEn
             if (pot.height === '' || pot.height === null || isNaN(Number(pot.height))) {
                 errors.push(`${label}: Altura es obligatoria.`);
             }
-            if (!pot.images.front) {
-                errors.push(`${label}: Foto de Frente es obligatoria.`);
-            }
+
             // Visual status is always set due to default, but ensures it's valid
             if (!pot.visualStatus) {
                 errors.push(`${label}: Estado Visual es obligatorio.`);
@@ -291,7 +289,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ user, onSave, onCancel, initialEn
                             <div className="bg-white bg-opacity-50 p-3 rounded-lg border border-gray-200">
                                 <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                     <Camera size={14} />
-                                    Evidencia Fotográfica <span className="text-red-500 text-[10px]">(Frente obligatorio)</span>
+                                    Evidencia Fotográfica <span className="text-gray-400 text-[10px]">(Opcional)</span>
                                 </label>
                                 <div className="grid grid-cols-3 gap-3">
                                     {renderPhotoSlot(activeTab, 'front', 'Frente')}
