@@ -33,11 +33,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const [initializing, setInitializing] = useState(true);
+    // We use refs to avoid stale closures in onAuthStateChange
+    const userRef = React.useRef<UserProfile | null>(null);
+    const sessionRef = React.useRef<Session | null>(null);
 
     // Core Profile Fetcher
     const fetchProfile = async (userId: string, userEmail?: string): Promise<UserProfile | null> => {
         try {
+            console.log(`[Auth] Fetching profile for ${userId}...`);
             // 1. Try to get existing profile
             let { data, error } = await supabase
                 .from('profiles')
@@ -46,63 +49,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .single();
 
             if (error && error.code !== 'PGRST116') {
-                console.error("Error fetching profile:", error);
+                console.error("[Auth] Error fetching profile:", error);
             }
 
             // 2. Handle Pending Registration (Local Storage)
-            // This is for the flow: Landing -> Kit Code -> Google Sign In -> Profile Creation
             const pendingReg = localStorage.getItem('pending_registration');
             let pendingProfile = pendingReg ? JSON.parse(pendingReg) : null;
 
             if (data) {
-                // Profile exists. Use it.
-                // Check if we need to backfill Kit Code from pending flow?
+                // ... (Keep existing logic for merging pending kit code)
                 if (!data.kit_code && pendingProfile && pendingProfile.kitCode) {
-                    console.log("Merging pending Kit Code into existing profile...");
                     const normalizedCode = pendingProfile.kitCode.trim().toUpperCase();
-
-                    // 1. Claim Kit
-                    // We await this to ensure we don't update profile if claim fails (unless it's already ours)
                     const claimed = await api.claimKit(normalizedCode, userId);
-
-                    // If claim failed, check if it was because WE already own it (idempotency)
-                    // But api.claimKit returns boolean. We'd need to check ownership if false.
-                    // For now, if claim fails, we might still want to link it if we are the owner?
-                    // Let's trust the flow: if claim fails, maybe don't update profile to avoid bad state?
-                    // But if the user stuck in the reported loop, they ARE the owner. 
-
-                    // Robust fix: Update profile anyway if we have a code.
-                    // If the code is invalid, the UI will just show it. 
-                    // But better: Check if we are the claimer?
-
                     let shouldUpdateProfile = claimed;
                     if (!claimed) {
                         const { data: kit } = await supabase.from('allowed_kits').select('claimed_by').eq('code', normalizedCode).single();
-                        if (kit && kit.claimed_by === userId) {
-                            shouldUpdateProfile = true;
-                        }
+                        if (kit && kit.claimed_by === userId) shouldUpdateProfile = true;
                     }
-
                     if (shouldUpdateProfile) {
                         await supabase.from('profiles').update({ kit_code: normalizedCode }).eq('id', userId);
                         data.kit_code = normalizedCode;
                         localStorage.removeItem('pending_registration');
                     }
                 } else if (data.kit_code) {
-                    // Profile HAS kit code (from Trigger metadata), but it might not be claimed in 'allowed_kits' yet
-                    // because we deferred it until now (post-login).
-                    // We optimistically try to claim it.
-                    // If already claimed by THIS user, it's fine (idempotent-ish check needed or just ignore false)
-                    // If claimed by ANOTHER user, user is in trouble (but trigger shouldn't have allowed duplicate kit usage ideally, 
-                    // though we removed uniqueness there? No, allowed_kits is unique. Profile kit_code isn't.)
-                    // Actually, if someone else stole the kit in between, this user has a kit code they can't use.
-                    // UI should handle "Kit Error". But for now, we try to claim.
-
-                    // We run this async so we don't block profile loading
-                    api.claimKit(data.kit_code, userId).then(success => {
-                        if (success) console.log("Kit successfully claimed (Deferred).");
-                        else console.log("Kit claim verification checked (Already claimed or unavailable).");
-                    }).catch(err => console.error("Error ensuring kit claim:", err));
+                    api.claimKit(data.kit_code, userId).catch(e => console.error("[Auth] Background claim error:", e));
                 }
 
                 const profile: UserProfile = {
@@ -113,56 +83,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     startDate: data.start_date || new Date().toISOString(),
                     role: data.role as 'user' | 'god',
                     score: data.score || 0,
-                    avatar: data.avatar // if exists
+                    avatar: data.avatar
                 };
                 return profile;
             } else if (pendingProfile) {
-                // 3. Profile does NOT exist, but we have Pending Data (e.g. fresh Google Sign Up)
-                console.log("Creating new profile from pending registration...");
+                console.log("[Auth] Creating profile from pending registration...");
                 const normalizedCode = pendingProfile.kitCode ? pendingProfile.kitCode.trim().toUpperCase() : '';
                 const newProfile: UserProfile = {
                     id: userId,
                     email: userEmail || '',
                     ...pendingProfile,
-                    kitCode: normalizedCode, // Ensure mapped correctly
+                    kitCode: normalizedCode,
                     startDate: new Date().toISOString(),
                     role: 'user',
                     score: 0
                 };
-
-                // Construct the object for DB
-                // We delegate to API or Trigger. 
-                // If Trigger failed or didn't run (e.g. race condition), we do it properly here.
-
-                // For robustness, we try to create it via API (Upsert)
                 try {
                     await api.createProfile(newProfile);
-                    if (newProfile.kitCode) {
-                        await api.claimKit(newProfile.kitCode, userId);
-                    }
+                    if (newProfile.kitCode) await api.claimKit(newProfile.kitCode, userId);
                     localStorage.removeItem('pending_registration');
                     return newProfile;
                 } catch (createErr) {
-                    console.error("Error creating profile:", createErr);
-                    // Fallback: return the temp profile so UI works, but it might fail later?
+                    console.error("[Auth] Error creating profile:", createErr);
                     return newProfile;
                 }
-            } else {
-                // 4. No Profile, No Pending Data.
-                // This is a "Zombie" user (Authenticated but no profile).
-                // Return null, let the UI handle "Complete Registration".
-                return null;
             }
-
+            return null;
         } catch (err) {
-            console.error("Critical error in fetchProfile:", err);
+            console.error("[Auth] Critical error in fetchProfile:", err);
             return null;
         }
     };
 
     const refreshProfile = async () => {
-        if (!session?.user) return;
-        const profile = await fetchProfile(session.user.id, session.user.email);
+        if (!sessionRef.current?.user) return;
+        const profile = await fetchProfile(sessionRef.current.user.id, sessionRef.current.user.email);
+        userRef.current = profile;
         setUser(profile);
     };
 
@@ -170,56 +126,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         let mounted = true;
 
-        const initialize = async () => {
-            try {
-                setLoading(true);
-                // Get initial session
-                const { data: { session: initialSession } } = await supabase.auth.getSession();
-
-                if (mounted) {
-                    setSession(initialSession);
-                    if (initialSession?.user) {
-                        const profile = await fetchProfile(initialSession.user.id, initialSession.user.email);
-                        if (mounted) setUser(profile);
-                    }
-                }
-            } catch (error) {
-                console.error("Initialization error:", error);
-            } finally {
-                if (mounted) {
-                    setLoading(false);
-                    setInitializing(false);
-                }
-            }
-        };
-
-        initialize();
-
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
             if (!mounted) return;
-            console.log("Auth State Change:", event);
+            console.log(`[Auth] Auth State Event: ${event}`);
 
-            if (event === 'SIGNED_OUT') {
-                setSession(null);
-                setUser(null);
-                setLoading(false);
-                return;
-            }
-
-            // Update session
+            // Update refs immediately
+            sessionRef.current = newSession;
             setSession(newSession);
 
             if (newSession?.user) {
-                // If it's just a token refresh and we already have a user, don't trigger loading
-                if (event === 'TOKEN_REFRESHED' && user) return;
+                // If it's a token refresh and we already have a user, don't re-fetch/re-load
+                if (event === 'TOKEN_REFRESHED' && userRef.current) {
+                    console.log("[Auth] Token refreshed, skipping profile fetch.");
+                    return;
+                }
 
                 setLoading(true);
                 const profile = await fetchProfile(newSession.user.id, newSession.user.email);
+
                 if (mounted) {
+                    userRef.current = profile;
                     setUser(profile);
                     setLoading(false);
                 }
             } else {
+                userRef.current = null;
                 setUser(null);
                 setLoading(false);
             }
