@@ -1,0 +1,476 @@
+                  Manual del Kit CultivaDatos
+ Experimento ciudadano masivo, una mirada al futuro de
+                  nuestra agricultura
+
+
+
+
+      Un kit diseñado por el Núcleo Milenio en Ciencia de Datos y Resiliencia Vegetal (PhytoLearning)
+
+
+
+
+Nombre del participante: __________________________________________________________
+
+Código Único del kit: ______________________________________________________________
+
+
+¡Escanea para acceder a nuestras redes!                                     Versión digital del kit (PDF)
+Tabla de Contenidos
+Bienvenida ............................................................................................................................ 3
+I. Contenido del Kit ............................................................................................................... 4
+II. Diseño Experimental ......................................................................................................... 4
+III. Fase de Crecimiento Inicial (días 0 a 21) ............................................................................ 5
+   Paso 1. Ubicación y etiquetado ............................................................................................ 5
+   Paso 2. Germinación de semillas (días 0 a 7) ......................................................................... 6
+   Paso 3. Traspaso de plantas ................................................................................................. 6
+   Paso 4. Riego durante la fase de crecimiento inicial (días 7 a 21) ............................................. 6
+IV. Tratamiento y comienzo del experimento (día 21 en adelante) ........................................... 7
+   A) Aplicación de sequía ....................................................................................................... 7
+   B) Aplicación de fertilizante KNO3 ......................................................................................... 7
+V. Registro de Datos .............................................................................................................. 7
+   A) Datos a ingresar .............................................................................................................. 8
+   B) Cómo registrar los datos .................................................................................................. 8
+VI. Consejos y Precauciones ................................................................................................. 9
+VII. Ficha Técnica de Seguridad – Fertilizante KNO3 .............................................................. 10
+VIII. Preguntas Frecuentes .................................................................................................. 11
+IX. Glosario Científico ......................................................................................................... 13
+
+
+
+
+                                                                                                                                       2
+¡Gracias por unirte a CultivaDatos!
+El cambio climático y el calentamiento global están afectando cada vez más la forma en
+que cultivamos nuestros alimentos. Una de las consecuencias más visibles es la sequía,
+que reduce la disponibilidad de agua para riego y pone en riesgo la producción agrícola en
+muchas regiones del país.
+
+Al mismo tiempo, los fertilizantes juegan un rol fundamental en el crecimiento de las
+plantas. En particular, el nitrógeno (un nutriente clave para que las plantas crezcan sanas y
+fuertes) debe ser utilizado con cuidado: si se usa en exceso o en el momento incorrecto,
+puede contaminar el medioambiente o afectar negativamente a las propias plantas. En este
+experimento ciudadano, usamos una forma específica de nitrógeno: el nitrato de potasio
+(KNO3), que se aplica en cantidades controladas para observar su efecto real en
+combinación con distintas condiciones de riego.
+
+Con tu kit, te sumas a un experimento científico masivo que busca entender cómo las
+plantas de tomate responden a la sequía y a la fertilización con nitrógeno. A través de
+acciones simples como sembrar, regar, medir y registrar, estarás aportando datos reales que
+ayudarán a diseñar cultivos más resistentes, eficientes y sostenibles.
+
+Este proyecto es parte de una gran red de ciencia ciudadana, y tú serás protagonista. Tus
+datos, junto con los de miles de otras personas, serán analizados por un equipo científico
+que utilizará herramientas como la inteligencia artificial para interpretar los resultados.
+
+    Cada dato que registres será un aporte real para la ciencia y la agricultura de nuestro país
+
+
+
+
+                                                                                               3
+I. Contenido del Kit
+Tu kit incluye todo lo necesario para realizar el experimento en casa. Identifica cada uno de
+los materiales que utilizarás antes de comenzar:
+
+
+
+
+     Nota importante: El sustrato (tierra) ya contiene nutrientes básicos, pero solo las macetas
+asignadas al tratamiento con fertilizante deben recibir el contenido de este tubo.
+
+
+
+
+                                                                                              4
+II. Diseño Experimental
+Para el diseño experimental trabajarás con 4 macetas, que tendrán una combinación entre
+dos condiciones o factores distintos:
+
+   •    Agua:
+          • Riego normal (R)
+          • Sequía (S)
+   •    Fertilizante KNO3:
+          • Con fertilizante (F)
+          • Sin fertilizante
+
+
+
+
+Esta combinación de condiciones o factores da origen a 4 tratamientos únicos:
+
+
+
+
+     Importante: Durante los primeros 21 días, todas las macetas entregadas recibirán diariamente
+un volumen de agua, la cual puede venir directamente de la llave. En este período de crecimiento no
+se debe incorporar ningún tipo de fertilizante. Cumplidos los 21 días, se debe dar inicio a los
+tratamientos correspondientes.
+
+
+
+
+                                                                                                 5
+III. Fase de Crecimiento Inicial (días 0 a 21)
+En esta fase, las semillas de tomate van a germinar para dar paso a la aparición de las
+plantas que luego se adaptarán al sustrato entregado (tierra). Durante este período, las
+plantas deben recibir un riego constante con agua. El objetivo es observar y registrar el
+impacto de la sequía en plantas desarrolladas y no en las semillas.
+
+Paso 1. Ubicación y etiquetado
+
+   •   Sobre una superficie lisa y estable, coloca el kit CultivaDatos y ábrelo con cuidado.
+       Intenta que la zona a trabajar disponga de una buena luminosidad y que esté lejos
+       de cualquier fuente de agua. Procura que las macetas no se encuentren
+       directamente bajo la luz solar.
+   •   En el interior del kit se dispone de macetas que se encuentran etiquetadas de
+       acuerdo con los diferentes tratamientos anteriormente indicados.
+   •   A continuación, debes vaciar por completo el contenido de cada bolsa plástica
+       (sustrato o tierra) al interior de las macetas. Recuerda: una bolsa de tierra es para
+       llenar solo una maceta.
+   •   Puedes utilizar las manos o una cuchara para facilitar el traspaso del contenido y
+       cada tanto presiona suavemente la tierra con los dedos para compactar de manera
+       leve el sustrato dentro de la maceta.
+   •   Mantén el kit fuera del alcance de bebés o niños. ¡Que no se la coma el perrito o
+       gatito!
+
+
+
+
+                                                                                          6
+Paso 2. Germinación de semillas (días 0 a 7)
+
+   •   Dentro del kit encontrarás una placa de Petri que
+       contiene en el fondo un papel filtro y encima del papel
+       las semillas.
+   •   Añade agua cuidadosamente hasta humedecer por
+       completo el papel, evitando el exceso. El agua puede
+       incorporarse con ayuda de una cuchara, depositándola
+       suavemente sobre el papel. La cantidad adecuada se
+       alcanza cuando el papel está completamente húmedo y
+       ya no absorbe más agua; sin embargo, es importante evitar el encharcamiento, ya
+       que las semillas no deben desplazarse con facilidad sobre la superficie húmeda.
+       Luego, cierra la placa colocando la tapa de la misma manera en que se encontraba
+       originalmente.
+   •   Espera durante 7 días hasta que las semillas germinen. Transcurridos los días verás
+       que sus raíces y hojas serán visibles dentro de la placa.
+
+Paso 3. Traspaso de plantas
+
+                                        • Una vez germinadas las semillas, haz un agujero
+                                        en el centro de cada maceta con una profundidad
+                                        cercana a los 2 centímetros. Puedes ayudarte de un
+                                        lápiz.
+                                        • Una vez preparado el orificio, las plantas deben
+                                        ser traspasadas al sustrato. Con mucha delicadeza,
+                                        toma una planta y coloca su raíz cuidadosamente
+                                        dentro del orificio. Para facilitar este proceso, puedes
+                                        utilizar pinzas (por ejemplo, pinzas de cejas), dos
+                                        cotonetes de algodón o, si lo prefieres, las manos,
+                                        procurando no dañar la planta.
+                                        • Ten presente que la raíz que tiene apariencia
+       translúcida o transparente debe estar completamente cubierta por la tierra, mientras
+       que, el tallo y las pequeñas hojas deben quedar expuestas a la luz natural.
+   •   Si tienes dudas de cómo realizar el procedimiento, puedes escanear el siguiente
+       código QR y ver el vídeo tutorial completo:
+
+
+
+
+                                                                                              7
+Paso 4. Riego durante la fase de crecimiento inicial (días 7 a 21)
+
+   •    Una vez completado el paso anterior, asegúrate de regar
+        con agua todas las macetas.
+   •    En esta etapa es fundamental que las plantas sean
+        regadas diariamente. Para comprobar si el sustrato
+        contiene la cantidad adecuada de agua, toca la superficie
+        con los dedos: si al retirarlos quedan adheridos pequeños
+        fragmentos de tierra, esto indica que el sustrato está
+        correctamente húmedo. Si lo anterior no ocurre, añade
+        agua de forma gradual. Evita el exceso de riego, ya que un
+        sustrato demasiado húmedo puede convertirse en barro
+        y afectar el desarrollo de la planta.
+   •    Una vez finalizado este proceso, introduce cada maceta en su respectiva bolsa
+        plástica y cierra completamente el cierre tipo zip como lo indica el video tutorial.
+   •    Recuerda que NO DEBES aplicar fertilizante durante esta etapa.
+   •    Para regar las plantas, abre la bolsa plástica y añade el agua de forma cuidadosa,
+        procurando humedecer el sustrato sin mojar en exceso las hojas ni generar
+        acumulación de agua en el fondo de la maceta. Una vez finalizado el riego, vuelve a
+        cerrar la bolsa correctamente.
+   •    Finalmente, en el día 20 las bolsas plásticas deben abrirse por completo,
+        permitiendo que las plantas queden expuestas al ambiente para favorecer su
+        adaptación gradual a las condiciones ambientales externas.
+
+
+
+
+                                                                                          8
+IV. Tratamiento y comienzo del experimento (día 21 en adelante)
+El día 21 marca el inicio de la fase experimental, por lo que en este día se debe comenzar
+con los diferentes tratamientos: sequía y fertilización.
+
+A) Aplicación de sequía
+
+Macetas de Riego normal (etiquetadas con una letra R) 1 y 3:
+
+   •   El objetivo principal de estas macetas es que el sustrato
+       debe mantenerse constantemente húmedo, sin llegar a
+       saturarse.
+   •   Antes de añadir el agua al sustrato, toma una tira reactiva
+       de pH con las manos y sumerge la sección colorida
+       completamente en el agua. Cuenta hasta 10 segundos y
+       luego retírala. Deposita la tira sobre una superficie plana
+       y envíanos una fotografía de la sección colorida de la tira
+       reactiva de pH.
+   •   La cantidad de agua debe ser cuidadosamente controlada utilizando la balanza
+       digital; por ejemplo, si la maceta pesa 35 gramos (g), se le debe agregar 30 mL o
+       gramos (g) de agua a esa maceta. Cantidades menores o mayores de agua pueden
+       restringir el proceso y afectar su crecimiento.
+
+Macetas de Sequía (etiquetadas con la letra S) 2 y 4:
+
+   • El objetivo de estas macetas es evaluar cómo es que las plantas de tomate se ven
+       afectadas por la sequía con el paso de los días. Para esto debes pesar las macetas
+       todos los días utilizando la balanza digital. Registra el peso de estas macetas en
+       la bitácora o en el sitio web.
+   • Recuerda: estas plantas no deben volver a regarse.
+
+
+
+
+                                                                                             9
+B) Aplicación de fertilizante KNO3
+
+                                 • Solamente se debe aplicar Fertilizante a las macetas
+                                 etiquetadas con una letra F (macetas 2 y 4, o también SF y
+                                 RF).
+                                 • Este fertilizante nitrogenado para las plantas debe ser
+                                 aplicado solo y exclusivamente en el día 21, coincidiendo
+                                 con el inicio del tratamiento de la sequía.
+                                 • Antes de aplicar el fertilizante a la tierra, toma una tira
+                                 reactiva de pH y sumerge la sección colorida en el líquido que
+                                 se encuentra dentro de tubo que dice “Fertilizante KNO3”).
+                                 Cuenta hasta 10 segundos y retira el papel. Recuerda sacar
+                                 una fotografía de la sección colorida de la tira reactiva de pH
+                                 y enviárnosla para determinar el resultado.
+                                 • Luego, toma el tubo con Fertilizante KNO3 y aplica 2 mL
+           solo a las macetas que contengan la letra F. Para medir este volumen, puedes
+           utilizar la pipeta Pasteur incluida en el kit.
+       • La pipeta Pasteur presenta una graduación visible en uno de sus costados, es
+           decir, es posible determinar los mL de fertilizante a añadir, lo que facilita la
+           medición precisa del líquido antes de su aplicación.
+
+     Nota importante: Nunca fertilizar antes del día 21, ya que, esto podría afectar la germinación
+de la semilla y el desarrollo inicial de las plantas.
+
+
+
+
+                                                                                                10
+V. Registro de Datos
+Toda la información que registres es fundamental para el proyecto ciudadano masivo.
+Debes medir y registrar datos al menos 2 veces por semana. Recuerda anotar cada aspecto
+u observación que consideres necesaria.
+
+A) Datos a registrar
+
+   1. Peso de cada maceta (en gramos). Recuerda calibrar (ajustar a cero) la balanza antes
+      de cada pesado de maceta utilizando el botón “Tare” que significa tarar.
+   2. pH del sustrato en condiciones de riego y sequía, con y sin fertilizante.
+   3. Altura de la planta en cm (utilizando la regla).
+   4. Estado visual de la planta (puedes tomar fotografías con tu dispositivo móvil para
+      esto):
+         • Germinación.
+         • Aparición de las primeras hojas.
+         • Síntomas de la sequía (hojas caídas o amarillentas).
+         • Aparición de flores, en caso de ocurrir.
+
+B) Cómo registrar los datos
+
+Tu participación es fundamental para entender cómo nuestros cultivos se adaptan a los
+desafíos del futuro. Sigue estos pasos sencillos para registrar tu progreso.
+
+
+
+
+                                                                                       11
+VI. Consejos y Precauciones
+  •   No acercar fuentes de calor, fuego o chispas, ya que el KNO3 es un oxidante y podría
+      reaccionar en condiciones extremas.
+  •   Guardar el tubo de KNO3 bien cerrado, en un lugar fresco y seco, fuera del alcance de
+      niños y mascotas.
+  •   Lávate bien las manos después de manipular las plantas, el sustrato o el fertilizante.
+  •   No ingerir ningún componente del kit.
+  •   Si eres alérgico al polvo o al sustrato, utilizar mascarilla y guantes al manipular las
+      macetas.
+  •   Si el fertilizante entra en contacto con la piel, lavar con abundante agua. Si hay
+      contacto con ojos, enjuagar inmediatamente y acudir a un centro médico.
+  •   Sigue siempre los mismos días y horarios de riego, pesaje y medición.
+  •   Mantén las macetas en un lugar con buena luz, pero evita exposición directa al sol
+      intenso durante muchas horas, ya que esto puede acelerar la evaporación y afectar
+      el desarrollo del experimento.
+  •   Proteger las plantas de la lluvia, puesto que el exceso de agua puede arruinar los
+      tratamientos de sequía.
+  •   Registra todos los datos el mismo día en la plataforma para evitar confusiones.
+  •   Calibra la balanza antes de cada uso con la función “tara”.
+  •   No trasplantar las plantas a otras macetas, ya que esto altera las mediciones.
+  •   Si una planta muere, no reemplazarla: continuar pesando y registrando la maceta
+      vacía.
+  •   Usa siempre agua limpia para el riego para evitar contaminaciones por fuentes
+      externas.
+
+
+
+
+                                                                                          12
+VII. Ficha Técnica de Seguridad – Fertilizante KNO3
+
+Nombre químico       Nitrato de Potasio (KNO₃)
+                     Tubo con fertilizante granulado o polvo fino diluido en agua
+Presentación
+                     destilada.
+Uso                  Aporte de nitrógeno (N) y potasio (K) a las plantas de tomate.
+Clasificación
+                     Categoría IV – Ligeramente peligroso (CITUC)
+toxicológica
+                     Oxidante. Puede reaccionar con fuego o chispas en condiciones
+Riesgos
+                     extremas. No inflamable por sí solo.
+Vías de exposición Inhalación de polvo, contacto con piel u ojos, ingestión accidental.
+                     Evita el contacto con calor o llamas. Manipula en lugar ventilado.
+Medidas
+                     Guarda bien cerrado, fuera del alcance de niños y mascotas. Utiliza
+preventivas
+                     guantes al manipular si tienes piel sensible.
+                     Piel: Lavar con abundante agua.
+En caso de           Ojos: Enjuagar inmediatamente con agua por al menos 15 minutos.
+accidente            Ingestión o reacción adversa: Acudir a un centro médico.
+                     Emergencias: Llamar al CITUC: +562 2 635 3800
+                     Lugar fresco, seco, alejado de la luz directa y fuentes de calor. No
+Almacenamiento
+                     mezclar con materiales combustibles.
+
+
+
+
+                                                                                            13
+VIII. Preguntas Frecuentes
+1. ¿Por qué las plantas tienen una fase de adaptación de 21 días?
+   - Para que la sequía afecte directamente a las plantas y no interfiera con la
+      germinación. De esta manera, todas las plantas se encontrarán adaptadas de la
+      misma manera cuando comience el experimento.
+
+2. ¿Qué pasa si me olvido de pesar una maceta?
+   - Registra el peso tan pronto como puedas y anota en la plataforma la fecha real de la
+      medición.
+
+3. ¿Qué hago si se me acaba el fertilizante antes de terminar el experimento?
+   - Mantén el registro de los datos y coloca en las observaciones la fecha del término de
+      fertilización con KNO3 para que los investigadores puedan tenerlo en consideración.
+
+4. ¿Qué hago si mis semillas no germinan después de 10 días?
+   - Revisa la humedad del sustrato. Si está muy seco, aumenta el riego suavemente.
+
+5. ¿Puedo sembrar semillas extra en las macetas?
+   - No. Cada maceta debe tener solo las semillas asignadas, para no alterar el diseño
+      experimental.
+
+6. ¿Qué pasa si riego en exceso una maceta de sequía?
+   - Registra el evento en la plataforma y continúa normalmente. Un riego extra ocasional
+      no invalida el experimento, pero debe quedar registrado.
+
+7. ¿Qué hago si todas las plantas parecen estar marchitas?
+   - Es normal que las plantas en sequía muestren signos de estrés (hojas caídas,
+      amarillamiento). Sigue con el proceso hasta el final y anota las observaciones.
+
+8. ¿Qué pasa si aplico demasiado fertilizante por error?
+   - Registra el hecho en la plataforma. No intentes retirar el exceso de fertilizante.
+      Continúa el experimento normalmente y anótalo como observación.
+
+9. ¿Puedo compartir fotos de mis plantas en redes sociales?
+   - ¡Sí! Solo recuerda no mezclar etiquetas de tratamientos y usar el hashtag
+      #CultivaDatos para que podamos encontrarlas y compartirlas.
+
+
+
+                                                                                       14
+10. Una planta se enfermó o murió, ¿puedo reemplazarla?
+    - No. Mantén la maceta en el experimento y sigue registrando su peso, aunque no
+      tenga planta. Esto nos ayuda a entender mejor el proceso.
+
+11. Aparecieron hongos o moho en la superficie del sustrato, ¿qué puedo hacer?
+    - La presencia de este tipo de hongos es muy común en los cultivos. Estos no son
+       tóxicos para los humanos ni para las plantas, ya que parte de la tierra contiene
+       componentes que pueden promover el crecimiento de hongos. Además, la tierra
+       contiene un porcentaje de humedad determinado, lo que forma un ambiente ideal
+       para crecimiento de hongos, pero no te asustes, ya que es parte de la comunidad
+       biológica que crece junto a la planta. Para solucionar esto, retira suavemente la capa
+       superficial afectada sin mover la planta y anótalo como observación en la
+       plataforma.
+
+
+
+
+                                                                                          15
+IX. Glosario Científico
+  •   Adaptación: Proceso mediante el cual las plantas ajustan su crecimiento y
+      metabolismo para sobrevivir a cambios en el ambiente, como la sequía o la
+      fertilización.
+
+  •   Calibrar: Ajustar un instrumento (por ejemplo, una balanza digital) para asegurar que
+      sus mediciones sean correctas y precisas.
+
+  •   Ciencia Ciudadana: Enfoque de investigación donde personas no especializadas
+      colaboran con científicos para recolectar datos y participar en experimentos.
+
+  •   Fertilizante: Sustancia que aporta nutrientes esenciales al suelo o a las plantas para
+      favorecer su crecimiento. En este experimento utilizamos nitrato de potasio (KNO 3).
+
+  •   Fertilización: Proceso de aplicar fertilizante a las plantas para mejorar su nutrición y
+      desarrollo.
+
+  •   Germinación: Etapa inicial en la que una semilla comienza a crecer y desarrollar sus
+      primeras raíces y hojas.
+
+  •   Hipótesis: Suposición o explicación que se plantea al inicio de un experimento y que
+      se busca comprobar mediante observaciones y datos.
+
+  •   Maceta: Recipiente con sustrato donde se siembran y crecen las plantas.
+
+  •   Nitrato de Potasio (KNO3): Compuesto químico que aporta nitrógeno y potasio,
+      nutrientes fundamentales para el desarrollo vegetal.
+
+  •   Observación: Registro visual y descriptivo de las condiciones de las plantas o del
+      experimento, que complementa los datos numéricos.
+
+  •   pH: Medida que indica si una sustancia es ácida, neutra o básica. En las plantas, el
+      pH del sustrato puede influir en la disponibilidad de nutrientes:
+         o pH 7 = neutro.
+         o pH menor a 7 = ácido.
+         o pH mayor a 7 = básico.
+
+
+                                                                                           16
+•   Pipeta Pasteur: Instrumento simple utilizado para medir y transferir pequeños
+    volúmenes de líquido, como el fertilizante.
+
+•   Sequía: Condición en la que las plantas reciben poco o nada de agua.
+
+•   Sustrato: Material que actúa como soporte físico y fuente de nutrientes para el
+    crecimiento de las plantas.
+
+•   Tara: Función de la balanza que permite poner a cero el peso antes de medir,
+    eliminando el peso del recipiente u objeto adicional.
+
+•   Tratamiento: Condiciones experimentales aplicadas a las plantas, como riego
+    normal, sequía, fertilización o combinaciones de estas.
+
+•   Variable: Factor medible que puede cambiar durante un experimento, como la altura
+    de la planta o el peso de la maceta.
+
+
+
+
+                                                                                  17
+
