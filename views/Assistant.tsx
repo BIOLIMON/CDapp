@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { sendMessageToOllama, ChatMessage } from '../services/ollamaService';
 import ReactMarkdown from 'react-markdown';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Message {
   id: string;
@@ -10,6 +12,7 @@ interface Message {
 }
 
 const Assistant: React.FC = () => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', role: 'assistant', text: '¡Hola! Soy tu asistente de CultivaDatos. ¿Tienes dudas sobre el riego, el fertilizante o tus plantas?' }
   ]);
@@ -25,23 +28,88 @@ const Assistant: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Load history from Supabase
+  useEffect(() => {
+    if (!user) return;
+
+    const loadHistory = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error('Error loading chat history:', error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const loadedMessages: Message[] = data.map((m: any) => ({
+            id: m.id,
+            role: m.role as 'user' | 'assistant',
+            text: m.content
+          }));
+          setMessages(loadedMessages);
+        }
+      } catch (err) {
+        console.error('Failed to load chat history:', err);
+      }
+    };
+
+    loadHistory();
+  }, [user]);
+
+  const saveMessage = async (text: string, role: 'user' | 'assistant') => {
+    if (!user) return;
+    try {
+      const { error } = await supabase.from('chat_messages').insert({
+        user_id: user.id,
+        role,
+        content: text
+      });
+      if (error) console.error('Error saving message:', error);
+    } catch (err) {
+      console.error('Failed to save message:', err);
+    }
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: input };
+    const userText = input;
+    const tempId = Date.now().toString();
+    const userMsg: Message = { id: tempId, role: 'user', text: userText };
+
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
+
+    // Save user message asynchronously
+    saveMessage(userText, 'user');
 
     const history = messages.map(m => ({
       role: m.role as 'user' | 'assistant',
       content: m.text
     }));
-    const responseText = await sendMessageToOllama(input, history);
 
-    const botMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', text: responseText || "No pude generar una respuesta." };
-    setMessages(prev => [...prev, botMsg]);
-    setIsLoading(false);
+    try {
+      const responseText = await sendMessageToOllama(userText, history);
+      const botResponse = responseText || "No pude generar una respuesta.";
+
+      const botMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', text: botResponse };
+      setMessages(prev => [...prev, botMsg]);
+
+      // Save bot message
+      saveMessage(botResponse, 'assistant');
+    } catch (error) {
+      console.error("Error getting response:", error);
+      const errorMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', text: "Lo siento, hubo un error al conectar con el asistente." };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
