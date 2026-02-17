@@ -9,19 +9,6 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: '0.0.0.0',
-      proxy: {
-        '/api/ollama': {
-          target: process.env.VITE_OLLAMA_API_URL || 'http://localhost:11434',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/ollama/, '/api/chat'),
-          configure: (proxy, _options) => {
-            proxy.on('proxyReq', (proxyReq, _req, _res) => {
-              proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
-              proxyReq.setHeader('x-api-key', process.env.VITE_OLLAMA_API_KEY || 'cultivadatos-secret-key-123');
-            });
-          },
-        },
-      },
     },
     plugins: [
       react(),
@@ -69,7 +56,9 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             vendor: ['react', 'react-dom'],
             supabase: ['@supabase/supabase-js'],
-            utils: ['lucide-react', 'recharts', 'react-markdown', 'html5-qrcode']
+            charts: ['recharts'],
+            utils: ['lucide-react', 'react-markdown', 'html5-qrcode'],
+            xlsx: ['xlsx']
           }
         }
       }

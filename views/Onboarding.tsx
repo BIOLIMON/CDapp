@@ -251,7 +251,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onSave, onLoginRequest }) => {
                             {leaderboard.map((user, idx) => (
                                 <div key={idx} className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
                                     <div className="flex items-center gap-3">
-                                        <span className={`font - bold w - 6 text - center ${idx === 0 ? 'text-yellow-500 text-xl' : 'text-gray-400'} `}>
+                                        <span className={`font-bold w-6 text-center ${idx === 0 ? 'text-yellow-500 text-xl' : 'text-gray-400'}`}>
                                             {idx + 1}
                                         </span>
                                         <span className="font-medium text-gray-700">{user.name}</span>

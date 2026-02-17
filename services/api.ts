@@ -180,8 +180,6 @@ export const api = {
 
     // --- Stats / Admin ---
 
-    // --- Stats / Admin ---
-
     calculateScore(entries: ExperimentEntry[]): number {
         let score = 0;
 

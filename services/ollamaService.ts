@@ -1,18 +1,24 @@
 import { MANUAL_CONTEXT } from "../constants";
 
-
-
 export interface ChatMessage {
     role: 'system' | 'user' | 'assistant';
     content: string;
 }
 
+/**
+ * Sends a message to the Ollama Cloud API (ollama.com).
+ * Requires VITE_OLLAMA_API_KEY env variable to be set.
+ */
 export const sendMessageToOllama = async (userMessage: string, history: ChatMessage[] = []) => {
-    // We now use the local proxy to avoid CORS issues
-    const baseUrl = '/api/ollama';
+    const apiKey = import.meta.env.VITE_OLLAMA_API_KEY;
+    const model = import.meta.env.VITE_OLLAMA_MODEL || 'gemma3:12b';
+    const baseUrl = 'https://ollama.com/api/chat';
+
+    if (!apiKey) {
+        return "⚠️ El asistente no está configurado. Falta la clave de API (VITE_OLLAMA_API_KEY).";
+    }
 
     try {
-        // Construct messages array with system prompt first
         const messages: ChatMessage[] = [
             { role: 'system', content: MANUAL_CONTEXT },
             ...history,
@@ -23,24 +29,25 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: 'mistral:7b', // This can be overriden by the proxy if needed, but sending it for clarity
-                messages: messages,
+                model,
+                messages,
                 stream: false
             }),
         });
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(`Server returned ${response.status}: ${errorData.error || response.statusText}`);
+            throw new Error(`Ollama Cloud returned ${response.status}: ${errorData.error || response.statusText}`);
         }
 
         const data = await response.json();
         return data.message?.content || "No se recibió respuesta del modelo.";
 
     } catch (error) {
-        console.error("Error calling Ollama:", error);
-        return "Lo siento, hubo un error al conectar con el asistente remoto. Verifica que el servidor (Ngrok) esté activo y la configuración sea correcta.";
+        console.error("Error calling Ollama Cloud:", error);
+        return "Lo siento, hubo un error al conectar con el asistente. Verifica que la clave de API sea válida.";
     }
 };

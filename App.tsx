@@ -84,16 +84,6 @@ export default function App() {
     }
   };
 
-  const handleLogout = async () => {
-    const { useAuth } = await import('./contexts/AuthContext'); // Dynamic? No, usage inside function is fine via closure default
-    // We use the hook provided 'signOut' via context, but we are outside the provider? No, App is inside Provider.
-    // Wait, App is the default export. index.tsx wraps it.
-
-    // We can't call hook conditionally/inside callback. 
-    // We already have 'signOut' from useAuth() at top level? No, destructuring at top.
-    // Let's grab it.
-  };
-
   const { signOut } = useAuth();
 
   const performLogout = async () => {
