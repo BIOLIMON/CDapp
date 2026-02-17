@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Custom theme - matches the original CDN config */
+@theme {
+  --color-primary: #2F855A;
+  --color-secondary: #C6F6D5;
+  --color-accent: #ECC94B;
+}
