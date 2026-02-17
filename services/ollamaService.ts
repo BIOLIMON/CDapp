@@ -6,18 +6,10 @@ export interface ChatMessage {
 }
 
 /**
- * Sends a message to the Ollama Cloud API (ollama.com).
- * Requires VITE_OLLAMA_API_KEY env variable to be set.
+ * Sends a message to the Ollama Cloud API via our Cloudflare Pages Function proxy.
+ * The proxy at /api/chat handles authentication and avoids CORS issues.
  */
 export const sendMessageToOllama = async (userMessage: string, history: ChatMessage[] = []) => {
-    const apiKey = import.meta.env.VITE_OLLAMA_API_KEY;
-    const model = import.meta.env.VITE_OLLAMA_MODEL || 'gemma3:12b';
-    const baseUrl = 'https://ollama.com/api/chat';
-
-    if (!apiKey) {
-        return "⚠️ El asistente no está configurado. Falta la clave de API (VITE_OLLAMA_API_KEY).";
-    }
-
     try {
         const messages: ChatMessage[] = [
             { role: 'system', content: MANUAL_CONTEXT },
@@ -25,14 +17,12 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
             { role: 'user', content: userMessage }
         ];
 
-        const response = await fetch(baseUrl, {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model,
                 messages,
                 stream: false
             }),
@@ -40,7 +30,7 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(`Ollama Cloud returned ${response.status}: ${errorData.error || response.statusText}`);
+            throw new Error(errorData.error || `Server returned ${response.status}`);
         }
 
         const data = await response.json();
@@ -48,6 +38,6 @@ export const sendMessageToOllama = async (userMessage: string, history: ChatMess
 
     } catch (error) {
         console.error("Error calling Ollama Cloud:", error);
-        return "Lo siento, hubo un error al conectar con el asistente. Verifica que la clave de API sea válida.";
+        return "Lo siento, hubo un error al conectar con el asistente. Intenta de nuevo más tarde.";
     }
 };
