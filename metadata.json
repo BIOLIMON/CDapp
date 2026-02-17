@@ -3,5 +3,6 @@
   "description": "Aplicación oficial para el seguimiento de experimentos del kit CultivaDatos. Registra el progreso de tus plantas de tomate, visualiza datos y recibe asistencia basada en el manual del proyecto.",
   "requestFramePermissions": [
     "camera"
-  ]
+  ],
+  "lastUpdate": "2026-02-17T13:45:00Z"
 }
