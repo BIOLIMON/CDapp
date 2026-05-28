@@ -1,20 +1,42 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+  <a href="https://github.com/PhytoLearningCL">
+    <img src="https://raw.githubusercontent.com/PhytoLearningCL/.github/main/profile/logo.png" alt="PhytoLearning" width="300">
+  </a>
+  <br><br>
+  <a href="https://github.com/PhytoLearningCL">
+    <img src="https://img.shields.io/badge/Desarrollado%20en-PhytoLearningCL-00A98F?style=for-the-badge&logo=github&logoColor=white" alt="PhytoLearningCL">
+  </a>
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+# CDapp
 
-View your app in AI Studio: https://ai.studio/apps/drive/1X8aH3N-2isR-FKXTd_aasRMJlM00u5q7
+Aplicación web con **IA generativa** para análisis de datos de cultivos, construida con **React + TypeScript** e integrada con la API de Gemini. Permite procesar y explorar datos agronómicos mediante lenguaje natural.
 
-## Run Locally
+## Requisitos
 
-**Prerequisites:**  Node.js
+- Node.js
+- API Key de Gemini
 
+## Instalación
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+```
+
+Configura tu clave en `.env.local`:
+
+```
+GEMINI_API_KEY=tu_clave_aqui
+```
+
+```bash
+npm run dev
+```
+
+---
+
+<div align="center">
+  <sub>Desarrollado en el marco de <a href="https://github.com/PhytoLearningCL">PhytoLearningCL</a> · Núcleo Milenio en Ciencia de Datos y Resiliencia Vegetal</sub>
+</div>
